@@ -1,7 +1,12 @@
 "use client";
-
+import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export default function RootLayout({
   children,
@@ -15,16 +20,7 @@ export default function RootLayout({
       <head>
         <title>{applicationName}</title>
       </head>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <body className={cn("font-sans", fontSans.variable)}>{children}</body>
     </html>
   );
 }

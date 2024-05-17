@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import { Layout } from "@/components/layout/layout";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,7 +28,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Layout>{children}</Layout>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Layout>{children}</Layout>
+        </ThemeProvider>
       </body>
     </html>
   );
