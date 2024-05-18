@@ -1,11 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { authService } from "@/src/service/auth";
 import { useForm } from "react-hook-form";
 import { LoginEntity, LoginSchema } from "@/src/entity/auth-entity";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
@@ -18,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { signIn } from "next-auth/react";
 
 type Props = {};
 
@@ -27,19 +26,20 @@ export default function LoginForm({}: Props) {
   const form = useForm<LoginEntity>({
     resolver: zodResolver(LoginSchema),
   });
-  const { login } = authService;
 
-  const onSubmit = async (data: LoginEntity) => {
-    const res = await login(data);
-
-    if (res?.access_token) {
-      Cookies.set("auth", res.access_token, {
-        expires: res.expires_in / 60 / 60 / 24,
-      });
-      router.push("/dashboard");
-    } else {
-      alert("Login failed");
-    }
+  const onSubmit = (data: LoginEntity) => {
+    signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      callbackUrl: "/dashboard",
+      redirect: false,
+    }).then(({ ok }: any) => {
+      if (ok) {
+        router.push("/dashboard");
+      } else {
+        alert("Login failed");
+      }
+    });
   };
 
   useEffect(() => {

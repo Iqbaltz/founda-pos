@@ -1,13 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "../ui/button";
 import { useSidebarContext } from "@/src/context/layout-context";
 import { LogInIcon, LogOutIcon, MenuIcon, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Utils } from "@/src/helpers/utils";
-import { authService } from "@/src/service/auth";
-import { User } from "@/src/entity/auth-entity";
+
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
@@ -15,35 +13,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import Cookies from "js-cookie";
+import { signOut, useSession } from "next-auth/react";
 
 type Props = {
   children: React.ReactNode;
 };
 
 export default function Navbar({ children }: Props) {
-  const [profile, setProfile] = useState<User>();
   const { setCollapsed } = useSidebarContext();
   const { setTheme, theme } = useTheme();
-  const { getProfile, logout } = authService;
-  const { isLoggedIn } = Utils;
+  const { data: session } = useSession();
 
-  const handleLogout = () => {
-    logout().then(() => {
-      setProfile(undefined);
-      Cookies.remove("auth");
-    });
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/login", redirect: true });
   };
-  const loadProfile = async () => {
-    const profile = await getProfile();
-    setProfile(profile);
-  };
-
-  useEffect(() => {
-    if (isLoggedIn()) {
-      loadProfile();
-    }
-  }, []);
 
   return (
     <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
@@ -62,13 +45,13 @@ export default function Navbar({ children }: Props) {
             <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
           <div className="mr-2">
-            {profile ? (
+            {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className="cursor-pointer">
                   <Avatar>
-                    <AvatarImage src={profile.photo} />
+                    <AvatarImage src={session?.user?.image as string} />
                     <AvatarFallback className="bg-primary-foreground">
-                      {profile.name[0]}
+                      {session.user?.name?.[0]}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
