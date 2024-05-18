@@ -34,14 +34,16 @@ export default function Navbar({ children }: Props) {
       Cookies.remove("auth");
     });
   };
+  const loadProfile = async () => {
+    const profile = await getProfile();
+    setProfile(profile);
+  };
 
   useEffect(() => {
     if (isLoggedIn()) {
-      getProfile().then((user) => {
-        setProfile(user);
-      });
+      loadProfile();
     }
-  }, [isLoggedIn]);
+  }, []);
 
   return (
     <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">

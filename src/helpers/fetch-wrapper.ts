@@ -6,6 +6,7 @@ const get = async (url: string) => {
     return res.data;
   } catch (error) {
     console.error(error);
+    console.log("err", error);
     return null;
   }
 };
