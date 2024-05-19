@@ -1,9 +1,3 @@
-import Cookies from "js-cookie";
+const isLoggedIn = async () => {};
 
-const isLoggedIn = () => {
-  return Cookies.get("auth") ? true : false;
-};
-
-export const Utils = {
-  isLoggedIn,
-};
+export const Utils = {};

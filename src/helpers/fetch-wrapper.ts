@@ -1,4 +1,39 @@
-import xios from "../config/axios";
+import axios, { AxiosInstance } from "axios";
+import https from "https";
+import { getSession } from "next-auth/react";
+
+const xios: AxiosInstance = axios.create({
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+  httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+  headers: {
+    Accept: "application/json",
+  },
+});
+
+// Add a request interceptor
+xios.interceptors.request.use(
+  async (config) => {
+    const session: any = await getSession();
+    if (session && session.accessToken) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+const auth = async (url: string, body: any) => {
+  const res = await axios.post(url, body, {
+    baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+    httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+    headers: {
+      Accept: "application/json",
+    },
+  });
+  return res.data;
+};
 
 const get = async (url: string) => {
   try {
@@ -6,7 +41,6 @@ const get = async (url: string) => {
     return res.data;
   } catch (error) {
     console.error(error);
-    console.log("err", error);
     return null;
   }
 };
@@ -46,4 +80,5 @@ export const fetchWrapper = {
   post,
   put,
   remove,
+  auth,
 };

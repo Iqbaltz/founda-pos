@@ -1,9 +1,9 @@
 import { authService } from "@/src/service/auth";
-import { NextAuthOptions } from "next-auth";
+import { AuthOptions, NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     Credentials({
       name: "Credentials",
@@ -32,14 +32,13 @@ export const authOptions: NextAuthOptions = {
             }
           );
 
-          return new Promise((resolve) => {
-            resolve({
-              email: user.data.email,
-              id: String(user.data.id),
-              name: user.data.name,
-              image: user.data.photo,
-            });
-          });
+          return {
+            email: user.data.email,
+            id: String(user.data.id),
+            name: user.data.name,
+            image: user.data.photo,
+            access_token: isLogin.access_token,
+          };
         }
 
         return null;
@@ -50,17 +49,20 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 1 * 60 * 60,
   },
-  // callbacks: {
-  //   async jwt({ token, user }) {
-  //     if (user) return { ...token, ...user };
-
-  //     return token;
-  //   },
-
-  //   async session({ token, session }) {
-  //     console.log("session", session);
-  //     console.log("token", token);
-  //     return session;
-  //   },
-  // },
+  callbacks: {
+    async jwt({ token, user }: { token: any; user: any }) {
+      if (user) {
+        token.accessToken = user?.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session) {
+        session = Object.assign({}, session, {
+          accessToken: token.accessToken,
+        });
+      }
+      return session;
+    },
+  },
 };

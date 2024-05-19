@@ -1,8 +1,45 @@
 import { useSidebarContext } from "@/src/context/layout-context";
 import React from "react";
-import { Button } from "../ui/button";
+import CollapsableItem from "./collapsable-item";
+import Link from "next/link";
 
 type Props = {};
+
+const sidebarItems = [
+  {
+    name: "Dashboard",
+    link: "/dashboard",
+  },
+  {
+    name: "Daftar Barang",
+    link: "/products",
+  },
+  {
+    name: "Daftar Supplier",
+    link: "/suppliers",
+  },
+  {
+    name: "Daftar Pelanggan",
+    link: "/customers",
+  },
+  {
+    name: "Master",
+    sub: [
+      {
+        name: "Kategori",
+        link: "/master/category",
+      },
+      {
+        name: "Metode Pembayaran",
+        link: "/master/payment-method",
+      },
+    ],
+  },
+  {
+    name: "Pengaturan",
+    link: "/settings",
+  },
+];
 
 export default function Sidebar({}: Props) {
   const { collapsed, setCollapsed } = useSidebarContext();
@@ -25,16 +62,24 @@ export default function Sidebar({}: Props) {
           <h1 className="font-bold">Pursida Cashier</h1>
         </div>
 
-        <div className="flex-1 overflow-y-auto mt-4">
-          <ul>
-            <li className="px-4 py-2 text-foreground hover:bg-accent">
-              Dashboard
-            </li>
-            <li className="px-4 py-2 text-foreground hover:bg-accent">Users</li>
-            <li className="px-4 py-2 text-foreground hover:bg-accent">
-              Settings
-            </li>
-          </ul>
+        <div className="flex flex-col overflow-y-auto mt-4">
+          {sidebarItems.map((item, index) => {
+            if (item.sub) {
+              return (
+                <CollapsableItem key={index} name={item.name} sub={item.sub} />
+              );
+            } else {
+              return (
+                <Link
+                  key={index}
+                  href={item.link}
+                  className="px-4 py-2 text-foreground hover:bg-accent cursor-pointer"
+                >
+                  {item.name}
+                </Link>
+              );
+            }
+          })}
         </div>
       </div>
     </aside>
