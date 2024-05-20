@@ -17,8 +17,6 @@ export default function ListBarang({}: Props) {
     loadData();
   }, []);
 
-  console.log("barangs", barangs);
-
   return (
     <div className="flex flex-col">
       {barangs?.map((barang) => (

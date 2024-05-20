@@ -73,7 +73,7 @@ export default function Sidebar({}: Props) {
                 <Link
                   key={index}
                   href={item.link}
-                  className="px-4 py-2 text-foreground hover:bg-accent cursor-pointer"
+                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer"
                 >
                   {item.name}
                 </Link>

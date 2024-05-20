@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import https from "https";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
 const xios: AxiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
@@ -38,8 +38,13 @@ const auth = async (url: string, body: any) => {
 const get = async (url: string) => {
   try {
     const res = await xios.get(url);
-    return res.data;
+    return res.data?.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
     console.error(error);
     return null;
   }
@@ -50,6 +55,11 @@ const post = async (url: string, body?: any) => {
     const res = await xios.post(url, body);
     return res.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
     console.error(error);
     return null;
   }
@@ -60,6 +70,11 @@ const put = async (url: string, body: any) => {
     const res = await xios.put(url, body);
     return res.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
     console.error(error);
     return null;
   }
@@ -70,6 +85,11 @@ const remove = async (url: string) => {
     const res = await xios.delete(url);
     return res.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
     console.error(error);
     return null;
   }

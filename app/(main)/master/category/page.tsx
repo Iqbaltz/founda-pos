@@ -1,7 +1,12 @@
 import React from "react";
+import CategoryList from "./category-list";
+import PageHeader from "@/components/layout/page-header";
 
-type Props = {};
-
-export default function MasterCategoryPage({}: Props) {
-  return <div>MasterCategoryPage</div>;
+export default async function MasterCategoryPage() {
+  return (
+    <div>
+      <PageHeader title="Category" />
+      <CategoryList />
+    </div>
+  );
 }

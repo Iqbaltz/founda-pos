@@ -1,11 +1,13 @@
 import React from "react";
-import { Accordion } from "../ui/accordion";
 import {
+  Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@radix-ui/react-accordion";
+} from "@/components/ui/accordion";
+
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 type Props = {
   name: string;
@@ -15,8 +17,8 @@ type Props = {
 export default function CollapsableItem({ name, sub }: Props) {
   return (
     <Accordion type="single" collapsible className="w-full">
-      <AccordionItem value={name}>
-        <AccordionTrigger className="text-left w-full px-4 py-2 cursor-pointer text-foreground hover:bg-accent">
+      <AccordionItem value={name} className="border-none">
+        <AccordionTrigger className="flex items-center text-left w-full px-4 py-3 cursor-pointer text-foreground hover:bg-accent hover:no-underline">
           {name}
         </AccordionTrigger>
         <AccordionContent className="flex flex-col">
