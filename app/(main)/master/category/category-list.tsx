@@ -21,67 +21,6 @@ import { Button } from "@/components/ui/button";
 
 type Props = {};
 
-export const columns: ColumnDef<Category>[] = [
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Id
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "id",
-    cell: ({ row }) => <span>{row.index + 1}</span>,
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "name",
-  },
-  {
-    header: "Action",
-    accessorKey: "",
-    cell: ({ row }) => (
-      <div className="flex gap-2">
-        <Link href={`./category/edit/${row?.original?.id}`}>
-          <EditIcon size={18} className="text-yellow-500" />
-        </Link>
-
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <TrashIcon size={18} className="text-destructive cursor-pointer" />
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Hapus item</AlertDialogTitle>
-              <AlertDialogDescription>
-                Apakah kamu yakin ingin menghapus item ini?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Batal</AlertDialogCancel>
-              <AlertDialogAction>Ya</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    ),
-  },
-];
-
 export default function CategoryList({}: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const { getAllCategories } = categoryService;
@@ -94,6 +33,82 @@ export default function CategoryList({}: Props) {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const columns: ColumnDef<Category>[] = [
+    {
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Id
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      accessorKey: "id",
+      cell: ({ row }) => <span>{row.index + 1}</span>,
+    },
+    {
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      accessorKey: "name",
+    },
+    {
+      header: "Action",
+      accessorKey: "",
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <Link href={`./category/edit/${row?.original?.id}`}>
+            <EditIcon size={18} className="text-yellow-500" />
+          </Link>
+
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <TrashIcon
+                size={18}
+                className="text-destructive cursor-pointer"
+              />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Hapus item</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Apakah kamu yakin ingin menghapus item ini?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async () => {
+                    const res = await categoryService.deleteCategory(
+                      row?.original?.id!
+                    );
+                    if (res) {
+                      alert("Kategori berhasil dihapus");
+                      fetchCategories();
+                    }
+                  }}
+                >
+                  Ya
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      ),
+    },
+  ];
 
   return <DataTable columns={columns} data={categories} addLink="./login" />;
 }

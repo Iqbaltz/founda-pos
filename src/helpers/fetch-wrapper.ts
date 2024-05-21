@@ -58,8 +58,10 @@ const post = async (url: string, body?: any) => {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         await signOut({ redirect: true, callbackUrl: "/login" });
+        return null;
       }
     }
+    alert("Something went wrong");
     console.error(error);
     return null;
   }

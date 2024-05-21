@@ -1,47 +1,52 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm, useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { CategorySchema } from "@/src/entity/category-entity";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryService } from "@/src/service/category";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-type Props = {};
+type Props = {
+  categoryName: string;
+};
 
-export default function AddForm({}: Props) {
+export default function EditForm({ categoryName }: Props) {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
   const form = useForm<z.infer<typeof CategorySchema>>({
     resolver: zodResolver(CategorySchema),
     defaultValues: {
-      name: "",
+      name: categoryName,
     },
   });
 
-  const { addCategory } = categoryService;
+  const { editCategory } = categoryService;
 
   async function onSubmit(data: z.infer<typeof CategorySchema>) {
-    const res = await addCategory({
+    const res = await editCategory(Number(id), {
       ...data,
       slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
-      alert("Kategori berhasil ditambahkan");
+      alert("Kategori berhasil diubah");
       form.reset();
       router.push("/master/category");
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

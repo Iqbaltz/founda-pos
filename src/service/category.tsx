@@ -5,20 +5,20 @@ const getAllCategories = async () => {
   return (await fetchWrapper.get("/category")) as Category[];
 };
 
-const getCategory = async (slug: string) => {
-  return await fetchWrapper.get(`/category/${slug}`);
+const getCategory = async (id: number) => {
+  return await fetchWrapper.get(`/category/${id}`);
 };
 
 const addCategory = async (payload: Category) => {
   return await fetchWrapper.post("/category", payload);
 };
 
-const editCategory = async (slug: string, payload: Category) => {
-  return await fetchWrapper.put(`/category/${slug}`, payload);
+const editCategory = async (id: number, payload: Category) => {
+  return await fetchWrapper.post(`/category/${id}`, payload);
 };
 
-const deleteCategory = async (slug: string) => {
-  return await fetchWrapper.remove(`/category/${slug}`);
+const deleteCategory = async (id: number) => {
+  return await fetchWrapper.remove(`/category/${id}`);
 };
 
 export const categoryService = {
