@@ -3,7 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Category } from "@/src/entity/category-entity";
 import { categoryService } from "@/src/service/category";
 import { ColumnDef } from "@tanstack/react-table";
-import { EditIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import {
@@ -17,17 +17,38 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 type Props = {};
 
 export const columns: ColumnDef<Category>[] = [
   {
-    header: "No",
-    accessorKey: "",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Id
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    accessorKey: "id",
     cell: ({ row }) => <span>{row.index + 1}</span>,
   },
   {
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     accessorKey: "name",
   },
   {

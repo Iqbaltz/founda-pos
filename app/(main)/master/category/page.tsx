@@ -5,7 +5,7 @@ import PageHeader from "@/components/layout/page-header";
 export default async function MasterCategoryPage() {
   return (
     <div>
-      <PageHeader title="Category" />
+      <PageHeader title="Kategori" />
       <CategoryList />
     </div>
   );
