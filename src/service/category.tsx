@@ -1,19 +1,25 @@
-import { Category } from "../entity/category-entity";
+import { CategoryEntity } from "../entity/category-entity";
 import { fetchWrapper } from "../helpers/fetch-wrapper";
+import { fetchWrapperServer } from "../helpers/fetch-wrapper-server";
 
 const getAllCategories = async () => {
-  return (await fetchWrapper.get("/category")) as Category[];
+  const res = await fetchWrapper.get("/category");
+  return res?.data as CategoryEntity[];
 };
 
 const getCategory = async (id: number) => {
   return await fetchWrapper.get(`/category/${id}`);
 };
 
-const addCategory = async (payload: Category) => {
+const getCategoryServer = async (id: number) => {
+  return await fetchWrapperServer.get(`/category/${id}`);
+};
+
+const addCategory = async (payload: CategoryEntity) => {
   return await fetchWrapper.post("/category", payload);
 };
 
-const editCategory = async (id: number, payload: Category) => {
+const editCategory = async (id: number, payload: CategoryEntity) => {
   return await fetchWrapper.post(`/category/${id}`, payload);
 };
 
@@ -27,4 +33,5 @@ export const categoryService = {
   addCategory,
   editCategory,
   deleteCategory,
+  getCategoryServer,
 };

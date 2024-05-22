@@ -1,11 +1,4 @@
 "use client";
-import { DataTable } from "@/components/ui/data-table";
-import { CategoryEntity } from "@/src/entity/category-entity";
-import { categoryService } from "@/src/service/category";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,23 +11,32 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
+import { paymentMethodService } from "@/src/service/payment-method";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 type Props = {};
 
-export default function CategoryList({}: Props) {
-  const [categories, setCategories] = useState<CategoryEntity[]>([]);
-  const { getAllCategories } = categoryService;
+export default function PaymentMethodList({}: Props) {
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethodEntity[]>(
+    []
+  );
+  const { getAllPaymentMethods } = paymentMethodService;
 
-  const fetchCategories = async () => {
-    const data = await getAllCategories();
-    setCategories(data);
+  const fetchPaymentMethods = async () => {
+    const data = await getAllPaymentMethods();
+    setPaymentMethods(data);
   };
 
   useEffect(() => {
-    fetchCategories();
+    fetchPaymentMethods();
   }, []);
 
-  const columns: ColumnDef<CategoryEntity>[] = [
+  const columns: ColumnDef<PaymentMethodEntity>[] = [
     {
       header: ({ column }) => {
         return (
@@ -68,7 +70,7 @@ export default function CategoryList({}: Props) {
       accessorKey: "",
       cell: ({ row }) => (
         <div className="flex gap-2">
-          <Link href={`./category/edit/${row?.original?.id}`}>
+          <Link href={`./payment-method/edit/${row?.original?.id}`}>
             <EditIcon size={18} className="text-yellow-500" />
           </Link>
 
@@ -90,12 +92,12 @@ export default function CategoryList({}: Props) {
                 <AlertDialogCancel>Batal</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={async () => {
-                    const res = await categoryService.deleteCategory(
+                    const res = await paymentMethodService.deletePaymentMethod(
                       row?.original?.id!
                     );
                     if (res) {
-                      alert("Kategori berhasil dihapus");
-                      fetchCategories();
+                      alert("Metode Pembayaran berhasil dihapus");
+                      fetchPaymentMethods();
                     }
                   }}
                 >
@@ -110,6 +112,10 @@ export default function CategoryList({}: Props) {
   ];
 
   return (
-    <DataTable columns={columns} data={categories} addLink="./category/add" />
+    <DataTable
+      columns={columns}
+      data={paymentMethods}
+      addLink="./payment-method/add"
+    />
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,36 +11,42 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { CategorySchema } from "@/src/entity/category-entity";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { categoryService } from "@/src/service/category";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { PaymentMethdoSchema } from "@/src/entity/payment-method-entity";
+import { paymentMethodService } from "@/src/service/payment-method";
 
-type Props = {};
+type Props = {
+  paymentMethodName: string;
+};
 
-export default function AddForm({}: Props) {
+export default function EditForm({ paymentMethodName }: Props) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof CategorySchema>>({
-    resolver: zodResolver(CategorySchema),
+  const params = useParams();
+  const id = params.id as string;
+
+  const form = useForm<z.infer<typeof PaymentMethdoSchema>>({
+    resolver: zodResolver(PaymentMethdoSchema),
     defaultValues: {
-      name: "",
+      name: paymentMethodName,
     },
   });
 
-  const { addCategory } = categoryService;
+  const { editPaymentMethod } = paymentMethodService;
 
-  async function onSubmit(data: z.infer<typeof CategorySchema>) {
-    const res = await addCategory({
+  async function onSubmit(data: z.infer<typeof PaymentMethdoSchema>) {
+    const res = await editPaymentMethod(Number(id), {
       ...data,
       slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
-      alert("Kategori berhasil ditambahkan");
+      alert("Metode Pembayaran berhasil diubah");
       form.reset();
-      router.push("/master/category");
+      router.push("../");
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -49,7 +55,7 @@ export default function AddForm({}: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nama Kategori</FormLabel>
+              <FormLabel>Nama Metode Pembayaran</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

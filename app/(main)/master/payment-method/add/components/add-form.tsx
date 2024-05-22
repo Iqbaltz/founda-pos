@@ -11,34 +11,34 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { CategorySchema } from "@/src/entity/category-entity";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { categoryService } from "@/src/service/category";
 import { useRouter } from "next/navigation";
+import { PaymentMethdoSchema } from "@/src/entity/payment-method-entity";
+import { paymentMethodService } from "@/src/service/payment-method";
 
 type Props = {};
 
 export default function AddForm({}: Props) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof CategorySchema>>({
-    resolver: zodResolver(CategorySchema),
+  const form = useForm<z.infer<typeof PaymentMethdoSchema>>({
+    resolver: zodResolver(PaymentMethdoSchema),
     defaultValues: {
       name: "",
     },
   });
 
-  const { addCategory } = categoryService;
+  const { addPaymentMethod } = paymentMethodService;
 
-  async function onSubmit(data: z.infer<typeof CategorySchema>) {
-    const res = await addCategory({
+  async function onSubmit(data: z.infer<typeof PaymentMethdoSchema>) {
+    const res = await addPaymentMethod({
       ...data,
       slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
-      alert("Kategori berhasil ditambahkan");
+      alert("Metode Pembayaran berhasil ditambahkan");
       form.reset();
-      router.push("/master/category");
+      router.push("../payment-method");
     }
   }
   return (
@@ -49,7 +49,7 @@ export default function AddForm({}: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nama Kategori</FormLabel>
+              <FormLabel>Nama Metode Pembayaran</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

@@ -38,7 +38,7 @@ const auth = async (url: string, body: any) => {
 const get = async (url: string) => {
   try {
     const res = await xios.get(url);
-    return res.data?.data;
+    return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {

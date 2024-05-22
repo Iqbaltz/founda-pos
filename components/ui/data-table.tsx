@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center justify-between pb-4">
         <Input placeholder="Cari..." className="max-w-sm" />
         {addLink && (
-          <Link href={"/master/category/add"}>
+          <Link href={addLink}>
             <Button
               variant={"secondary"}
               className="flex items-center justify-center gap-1"
