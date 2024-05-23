@@ -12,7 +12,7 @@ const sidebarItems = [
   },
   {
     name: "Daftar Barang",
-    link: "/products",
+    link: "/product",
   },
   {
     name: "Daftar Supplier",
