@@ -33,7 +33,6 @@ export default function AddForm({}: Props) {
   async function onSubmit(data: z.infer<typeof CategorySchema>) {
     const res = await addCategory({
       ...data,
-      slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
       alert("Kategori berhasil ditambahkan");

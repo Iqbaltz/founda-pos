@@ -33,7 +33,6 @@ export default function AddForm({}: Props) {
   async function onSubmit(data: z.infer<typeof PaymentMethdoSchema>) {
     const res = await addPaymentMethod({
       ...data,
-      slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
       alert("Metode Pembayaran berhasil ditambahkan");

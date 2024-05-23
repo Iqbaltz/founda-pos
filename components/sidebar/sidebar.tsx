@@ -16,7 +16,7 @@ const sidebarItems = [
   },
   {
     name: "Daftar Supplier",
-    link: "/suppliers",
+    link: "/supplier",
   },
   {
     name: "Daftar Pelanggan",

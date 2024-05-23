@@ -38,7 +38,6 @@ export default function EditForm({ categoryName }: Props) {
   async function onSubmit(data: z.infer<typeof CategorySchema>) {
     const res = await editCategory(Number(id), {
       ...data,
-      slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
       alert("Kategori berhasil diubah");

@@ -38,7 +38,6 @@ export default function EditForm({ paymentMethodName }: Props) {
   async function onSubmit(data: z.infer<typeof PaymentMethdoSchema>) {
     const res = await editPaymentMethod(Number(id), {
       ...data,
-      slug: data.name.toLowerCase().replace(/\s/g, "-"),
     });
     if (res) {
       alert("Metode Pembayaran berhasil diubah");
