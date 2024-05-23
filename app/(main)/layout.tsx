@@ -4,6 +4,7 @@ import "../globals.css";
 import { cn } from "@/lib/utils";
 import { Layout } from "@/components/layout/layout";
 import { ThemeProvider } from "@/components/theme-provider";
+import ProgressBarProvider from "@/components/progressbar-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -34,7 +35,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Layout>{children}</Layout>
+          <ProgressBarProvider>
+            <Layout>{children}</Layout>
+          </ProgressBarProvider>
         </ThemeProvider>
       </body>
     </html>
