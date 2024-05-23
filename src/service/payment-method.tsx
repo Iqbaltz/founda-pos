@@ -3,10 +3,8 @@ import { fetchWrapper } from "../helpers/fetch-wrapper";
 import { fetchWrapperServer } from "../helpers/fetch-wrapper-server";
 
 const getAllPaymentMethods = async () => {
-  const res = (await fetchWrapper.get(
-    "/payment-method"
-  )) as PaymentMethodEntity[];
-  return res;
+  const res = await fetchWrapper.get("/payment-method");
+  return res?.data as PaymentMethodEntity[];
 };
 
 const getPaymentMethod = async (id: number) => {

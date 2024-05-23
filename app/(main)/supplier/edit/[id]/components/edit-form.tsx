@@ -13,7 +13,8 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { useParams } from "next/navigation";
 import { SupplierSchema } from "@/src/entity/supplier-entity";
 import { supplierService } from "@/src/service/supplier";
 

@@ -1,11 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import Cookies from "js-cookie";
-import { authService } from "@/src/service/auth";
 import LoginForm from "./components/login-form";
 
 type Props = {};
