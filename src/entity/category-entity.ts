@@ -6,7 +6,6 @@ export const CategorySchema = z.object({
 
 export interface CategoryEntity {
   id?: number;
-  slug?: string;
   name: string;
   created_at?: string;
   updated_at?: string;
