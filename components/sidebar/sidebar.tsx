@@ -20,7 +20,7 @@ const sidebarItems = [
   },
   {
     name: "Daftar Pelanggan",
-    link: "/customers",
+    link: "/customer",
   },
   {
     name: "Master",
