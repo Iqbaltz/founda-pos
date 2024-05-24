@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LoginEntity, LoginSchema } from "@/src/entity/auth-entity";

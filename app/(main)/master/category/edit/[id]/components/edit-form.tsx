@@ -15,7 +15,8 @@ import { CategorySchema } from "@/src/entity/category-entity";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categoryService } from "@/src/service/category";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
+import { useParams } from "next/navigation";
 
 type Props = {
   categoryName: string;
