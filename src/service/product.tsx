@@ -7,6 +7,11 @@ const getAllProducts = async () => {
   return res?.data as ProductEntity[];
 };
 
+const getAllProductsServer = async () => {
+  const res = await fetchWrapperServer.get("/barang");
+  return res?.data as ProductEntity[];
+};
+
 const getProduct = async (id: number) => {
   return await fetchWrapper.get(`/barang/${id}`);
 };
@@ -29,6 +34,7 @@ const deleteProduct = async (id: number) => {
 
 export const productService = {
   getAllProducts,
+  getAllProductsServer,
   getProduct,
   addProduct,
   editProduct,
