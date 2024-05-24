@@ -7,8 +7,8 @@ type Props = {};
 
 const sidebarItems = [
   {
-    name: "Dashboard",
-    link: "/dashboard",
+    name: "Kasir",
+    link: "/cashier",
   },
   {
     name: "Daftar Barang",
