@@ -37,7 +37,7 @@ const sidebarItems = [
   },
   {
     name: "Pengaturan",
-    link: "/settings",
+    link: "/setting",
   },
 ];
 
