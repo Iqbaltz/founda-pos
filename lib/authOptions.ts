@@ -47,7 +47,7 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 1 * 60 * 60,
+    maxAge: process.env.JWT_TTL ? Number(process.env.JWT_TTL) : 24 * 60 * 60,
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
