@@ -7,6 +7,11 @@ const getAllSupplier = async () => {
   return res?.data as SupplierEntity[];
 };
 
+const getAllSupplierServer = async () => {
+  const res = await fetchWrapperServer.get("/supplier");
+  return res?.data as SupplierEntity[];
+};
+
 const getSupplier = async (id: number) => {
   return await fetchWrapper.get(`/supplier/${id}`);
 };
@@ -29,6 +34,7 @@ const deleteSupplier = async (id: number) => {
 
 export const supplierService = {
   getAllSupplier,
+  getAllSupplierServer,
   getSupplier,
   addSupplier,
   editSupplier,

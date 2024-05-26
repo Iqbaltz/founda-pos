@@ -36,8 +36,12 @@ const sidebarItems = [
     ],
   },
   {
+    name: "Barang Masuk",
+    link: "/product-transaction",
+  },
+  {
     name: "Pengaturan",
-    link: "/settings",
+    link: "/setting",
   },
 ];
 
