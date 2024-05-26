@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CategoryEntity } from "./category-entity";
 
 export const ProductSchema = z.object({
   name: z.string().min(1, "Required"),
@@ -23,12 +24,5 @@ export interface ProductEntity {
   stok: number;
   created_at?: Date;
   updated_at?: Date;
-  category?: Category;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  created_at: null;
-  updated_at: null;
+  category?: CategoryEntity;
 }
