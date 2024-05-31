@@ -97,7 +97,7 @@ export default function AddForm({}: Props) {
                     <SelectValue placeholder="-- Pilih Kategori --" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                       <SelectItem
                         key={category.id}
                         value={String(category.id!)}

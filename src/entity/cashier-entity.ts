@@ -5,25 +5,35 @@ export const CashierSchema = z.object({
   cashier_id: z.string(),
   customer_id: z.string(),
   payment_method_id: z.string(),
-  potongan: z.number(),
-  items: z.array(
-    z.object({
-      barang_id: z.string(),
-      transaction_type: z.string(),
-      qty: z.number(),
-    })
-  ),
+  discount: z.number(),
+  items: z
+    .array(
+      z.object({
+        barang_id: z.string(),
+        transaction_type: z.string(),
+        qty: z.number(),
+      })
+    )
+    .min(1, "Minimum 1 item"),
 });
+
+export const CashierItemSchema = z.object({
+  barang_id: z.string().min(1, "Barang harus diisi"),
+  transaction_type: z.string().min(1, "Tipe Harga harus diisi"),
+  qty: z.number().min(1, "Jumlah harus lebih dari 0"),
+});
+
+export interface CashierItemEntity {
+  barang_id: string;
+  transaction_type: string;
+  qty: number;
+}
 
 export interface CashierEntity {
   transaction_date: string;
   cashier_id: string;
   customer_id: string;
   payment_method_id: string;
-  potongan: number;
-  items: {
-    barang_id: string;
-    transaction_type: string;
-    qty: number;
-  }[];
+  discount: number;
+  items: CashierItemEntity[];
 }

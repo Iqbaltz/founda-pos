@@ -2,6 +2,16 @@ import { useSidebarContext } from "@/src/context/layout-context";
 import React from "react";
 import CollapsableItem from "./collapsable-item";
 import Link from "next/link";
+import {
+  BadgeDollarSignIcon,
+  BrickWallIcon,
+  HistoryIcon,
+  ListEndIcon,
+  ListIcon,
+  ListTree,
+  Settings,
+  TruckIcon,
+} from "lucide-react";
 
 type Props = {};
 
@@ -9,21 +19,31 @@ const sidebarItems = [
   {
     name: "Kasir",
     link: "/cashier",
+    icon: <BadgeDollarSignIcon />,
+  },
+  {
+    name: "Transaksi Kasir",
+    link: "/transaction-history",
+    icon: <HistoryIcon />,
   },
   {
     name: "Daftar Barang",
     link: "/product",
+    icon: <ListIcon />,
   },
   {
     name: "Daftar Supplier",
     link: "/supplier",
+    icon: <ListIcon />,
   },
   {
     name: "Daftar Pelanggan",
     link: "/customer",
+    icon: <ListIcon />,
   },
   {
     name: "Master",
+    icon: <BrickWallIcon />,
     sub: [
       {
         name: "Kategori",
@@ -38,10 +58,12 @@ const sidebarItems = [
   {
     name: "Barang Masuk",
     link: "/product-transaction",
+    icon: <TruckIcon />,
   },
   {
     name: "Pengaturan",
     link: "/setting",
+    icon: <Settings />,
   },
 ];
 
@@ -70,15 +92,21 @@ export default function Sidebar({}: Props) {
           {sidebarItems.map((item, index) => {
             if (item.sub) {
               return (
-                <CollapsableItem key={index} name={item.name} sub={item.sub} />
+                <CollapsableItem
+                  key={index}
+                  name={item.name}
+                  sub={item.sub}
+                  icon={item?.icon}
+                />
               );
             } else {
               return (
                 <Link
                   key={index}
                   href={item.link}
-                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer"
+                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer flex items-center gap-2"
                 >
+                  {item?.icon && item?.icon}
                   {item.name}
                 </Link>
               );

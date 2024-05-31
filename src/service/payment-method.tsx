@@ -7,6 +7,11 @@ const getAllPaymentMethods = async () => {
   return res?.data as PaymentMethodEntity[];
 };
 
+const getAllPaymentMethodsServer = async () => {
+  const res = await fetchWrapperServer.get("/payment-method");
+  return res?.data as PaymentMethodEntity[];
+};
+
 const getPaymentMethod = async (id: number) => {
   return await fetchWrapper.get(`/payment-method/${id}`);
 };
@@ -29,6 +34,7 @@ const deletePaymentMethod = async (id: number) => {
 
 export const paymentMethodService = {
   getAllPaymentMethods,
+  getAllPaymentMethodsServer,
   getPaymentMethod,
   addPaymentMethod,
   editPaymentMethod,

@@ -1,10 +1,26 @@
+import { customerService } from "@/src/service/customer";
 import CashierForm from "./components/cashier-form";
+import PageHeader from "@/components/layout/page-header";
+import { productService } from "@/src/service/product";
+import { paymentMethodService } from "@/src/service/payment-method";
 
 export default async function CashierPage() {
+  const { getAllCustomerServer } = customerService;
+  const { getAllProductsServer } = productService;
+  const { getAllPaymentMethodsServer } = paymentMethodService;
+
+  const customers = await getAllCustomerServer();
+  const products = await getAllProductsServer();
+  const paymentMethods = await getAllPaymentMethodsServer();
+
   return (
-    <div className="w-full bg-secondary flex flex-col justify-center items-center p-8">
-      <h1 className="font-bold text-2xl mb-4">Cashier Transaction Page</h1>
-      <CashierForm />
+    <div>
+      <PageHeader title="Kasir" />
+      <CashierForm
+        customers={customers}
+        products={products}
+        paymentMethods={paymentMethods}
+      />
     </div>
   );
 }

@@ -91,7 +91,7 @@ export default function AddForm({}: Props) {
     field: ControllerRenderProps<ProductTransactionEntity, "barang_id">,
     value: string
   ) => {
-    const product = products.find((product) => String(product.id) === value);
+    const product = products?.find((product) => String(product.id) === value);
     form.setValue("harga_beli", product ? product.harga_modal : 0);
     return field.onChange(Number(value));
   };
