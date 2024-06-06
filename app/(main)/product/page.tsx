@@ -5,7 +5,7 @@ import ProductList from "./product-list";
 export default async function ProductsPage() {
   return (
     <div>
-      <PageHeader title="Barang" />
+      <PageHeader title="Daftar Barang" />
       <ProductList />
     </div>
   );

@@ -47,12 +47,13 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 1 * 60 * 60 * 24,
+    maxAge: process.env.JWT_TTL ? Number(process.env.JWT_TTL) : 24 * 60 * 60,
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.accessToken = user?.access_token;
+        token.id = user?.id;
       }
       return token;
     },
@@ -60,6 +61,7 @@ export const authOptions: AuthOptions = {
       if (session) {
         session = Object.assign({}, session, {
           accessToken: token.accessToken,
+          id: token.id,
         });
       }
       return session;

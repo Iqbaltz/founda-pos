@@ -5,7 +5,7 @@ import ProductTransactionList from "./product-transaction-list";
 export default async function ProductsPage() {
   return (
     <Suspense>
-      <PageHeader title="Barang" />
+      <PageHeader title="Transaksi Barang Masuk" />
       <ProductTransactionList />
     </Suspense>
   );

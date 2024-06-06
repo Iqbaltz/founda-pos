@@ -7,6 +7,11 @@ const getAllCustomer = async () => {
   return res?.data as CustomerEntity[];
 };
 
+const getAllCustomerServer = async () => {
+  const res = await fetchWrapperServer.get("/customer");
+  return res?.data as CustomerEntity[];
+};
+
 const getCustomer = async (id: number) => {
   return await fetchWrapper.get(`/customer/${id}`);
 };
@@ -29,6 +34,7 @@ const deleteCustomer = async (id: number) => {
 
 export const customerService = {
   getAllCustomer,
+  getAllCustomerServer,
   getCustomer,
   addCustomer,
   editCustomer,

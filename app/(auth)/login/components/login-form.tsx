@@ -30,11 +30,11 @@ export default function LoginForm({}: Props) {
     signIn("credentials", {
       email: data.email,
       password: data.password,
-      callbackUrl: "/dashboard",
+      callbackUrl: "/cashier",
       redirect: false,
     }).then(({ ok }: any) => {
       if (ok) {
-        router.push("/dashboard");
+        router.push("/cashier");
       } else {
         alert("Login failed");
       }

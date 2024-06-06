@@ -2,28 +2,53 @@ import { useSidebarContext } from "@/src/context/layout-context";
 import React from "react";
 import CollapsableItem from "./collapsable-item";
 import Link from "next/link";
+import {
+  BadgeDollarSignIcon,
+  BoxIcon,
+  BrickWallIcon,
+  HistoryIcon,
+  Settings,
+  TruckIcon,
+  User2Icon,
+  UserCog,
+} from "lucide-react";
 
 type Props = {};
 
 const sidebarItems = [
   {
-    name: "Dashboard",
-    link: "/dashboard",
+    name: "Kasir",
+    link: "/cashier",
+    icon: <BadgeDollarSignIcon />,
+  },
+  {
+    name: "Transaksi Kasir",
+    link: "/cashier-transaction",
+    icon: <HistoryIcon />,
   },
   {
     name: "Daftar Barang",
     link: "/product",
+    icon: <BoxIcon />,
+  },
+  {
+    name: "Barang Masuk",
+    link: "/product-transaction",
+    icon: <TruckIcon />,
   },
   {
     name: "Daftar Supplier",
     link: "/supplier",
+    icon: <UserCog />,
   },
   {
     name: "Daftar Pelanggan",
     link: "/customer",
+    icon: <User2Icon />,
   },
   {
     name: "Master",
+    icon: <BrickWallIcon />,
     sub: [
       {
         name: "Kategori",
@@ -35,13 +60,11 @@ const sidebarItems = [
       },
     ],
   },
-  {
-    name: "Barang Masuk",
-    link: "/product-transaction",
-  },
+
   {
     name: "Pengaturan",
     link: "/setting",
+    icon: <Settings />,
   },
 ];
 
@@ -58,7 +81,7 @@ export default function Sidebar({}: Props) {
       <div
         className={`fixed flex flex-col -translate-x-full h-full bg-primary-foreground transition z-10 ${
           collapsed
-            ? "md:fixed md:-translate-x-full -translate-x-0"
+            ? "md:fixed md:-translate-x-full translate-x-0"
             : "md:static md:-translate-x-0 -translate-x-full"
         }`}
       >
@@ -70,15 +93,21 @@ export default function Sidebar({}: Props) {
           {sidebarItems.map((item, index) => {
             if (item.sub) {
               return (
-                <CollapsableItem key={index} name={item.name} sub={item.sub} />
+                <CollapsableItem
+                  key={index}
+                  name={item.name}
+                  sub={item.sub}
+                  icon={item?.icon}
+                />
               );
             } else {
               return (
                 <Link
                   key={index}
                   href={item.link}
-                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer"
+                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer flex items-center gap-2"
                 >
+                  {item?.icon && item?.icon}
                   {item.name}
                 </Link>
               );
