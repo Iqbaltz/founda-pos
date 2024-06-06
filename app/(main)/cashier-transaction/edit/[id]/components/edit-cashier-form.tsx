@@ -21,21 +21,22 @@ import { cashierService } from "@/src/service/cashier";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import TransactionTable from "./transaction-table";
+import EditTransactionTable from "./edit-transaction-table";
 import { CustomerEntity } from "@/src/entity/customer-entity";
 import { ProductEntity } from "@/src/entity/product-entity";
 import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { CanvasHTMLAttributes, useEffect } from "react";
+import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entity";
 
 type Props = {
-  customers: CustomerEntity[];
+  transactionDetail: CashierTransactionEntity;
   products: ProductEntity[];
   paymentMethods: PaymentMethodEntity[];
 };
 
-export default function CashierForm({
-  customers,
+export default function EditCashierForm({
+  transactionDetail,
   products,
   paymentMethods,
 }: Props) {
@@ -44,7 +45,15 @@ export default function CashierForm({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
-      customer_id: customers?.find((customer) => customer.name === "UMUM")?.id,
+      customer_id: transactionDetail?.customer_id,
+      discount: Number(transactionDetail?.discount),
+      payment_amount: transactionDetail?.payment_amount,
+      payment_method_id: String(transactionDetail?.payment_method_id),
+      items: transactionDetail?.transaction_items?.map((item) => ({
+        barang_id: String(item.barang_id),
+        qty: item.qty,
+        transaction_type: item.transaction_type,
+      })),
     },
   });
 
@@ -53,17 +62,17 @@ export default function CashierForm({
     name: "items",
   });
 
-  const { addTransaction } = cashierService;
+  const { editTransaction } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
-    const res = await addTransaction({
-      ...data,
-    });
-
-    if (res) {
-      alert("Transaksi berhasil!");
-      form.reset();
-    }
+    console.log("data", data);
+    // const res = await editTransaction({
+    //   ...data,
+    // });
+    // if (res) {
+    //   alert("Transaksi berhasil!");
+    //   form.reset();
+    // }
   }
 
   useEffect(
@@ -92,19 +101,18 @@ export default function CashierForm({
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
                       value={String(field.value)}
+                      disabled
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="-- Pilih Pelanggan --" />
                       </SelectTrigger>
                       <SelectContent>
-                        {customers?.map((customer) => (
-                          <SelectItem
-                            key={customer.id}
-                            value={String(customer.id!)}
-                          >
-                            {customer.name}
-                          </SelectItem>
-                        ))}
+                        <SelectItem
+                          key={transactionDetail?.customer_id}
+                          value={String(transactionDetail?.customer_id!)}
+                        >
+                          {transactionDetail?.customer?.name}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -129,14 +137,14 @@ export default function CashierForm({
         </form>
       </Form>
       <div className="space-y-4 my-4">
-        <TransactionTable
+        <EditTransactionTable
           fieldArray={fieldArray}
-          products={products}
           form={form}
+          products={products}
           paymentMethods={paymentMethods}
         />
         <div className="flex justify-end" onClick={form.handleSubmit(onSubmit)}>
-          <Button>Submit Transaksi</Button>
+          <Button>Bayar Sisa</Button>
         </div>
       </div>
     </>

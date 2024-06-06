@@ -30,7 +30,7 @@ export default function CollapsableItem({ name, sub, icon }: Props) {
             <Link
               href={item.link}
               key={`${name}-${index}`}
-              className="w-full px-8 py-2 text-foreground hover:bg-accent"
+              className="w-full px-8 pl-12 py-2 text-foreground hover:bg-accent"
             >
               {item.name}
             </Link>

@@ -4,13 +4,13 @@ import CollapsableItem from "./collapsable-item";
 import Link from "next/link";
 import {
   BadgeDollarSignIcon,
+  BoxIcon,
   BrickWallIcon,
   HistoryIcon,
-  ListEndIcon,
-  ListIcon,
-  ListTree,
   Settings,
   TruckIcon,
+  User2Icon,
+  UserCog,
 } from "lucide-react";
 
 type Props = {};
@@ -23,23 +23,28 @@ const sidebarItems = [
   },
   {
     name: "Transaksi Kasir",
-    link: "/transaction-history",
+    link: "/cashier-transaction",
     icon: <HistoryIcon />,
   },
   {
     name: "Daftar Barang",
     link: "/product",
-    icon: <ListIcon />,
+    icon: <BoxIcon />,
+  },
+  {
+    name: "Barang Masuk",
+    link: "/product-transaction",
+    icon: <TruckIcon />,
   },
   {
     name: "Daftar Supplier",
     link: "/supplier",
-    icon: <ListIcon />,
+    icon: <UserCog />,
   },
   {
     name: "Daftar Pelanggan",
     link: "/customer",
-    icon: <ListIcon />,
+    icon: <User2Icon />,
   },
   {
     name: "Master",
@@ -55,11 +60,7 @@ const sidebarItems = [
       },
     ],
   },
-  {
-    name: "Barang Masuk",
-    link: "/product-transaction",
-    icon: <TruckIcon />,
-  },
+
   {
     name: "Pengaturan",
     link: "/setting",
@@ -80,7 +81,7 @@ export default function Sidebar({}: Props) {
       <div
         className={`fixed flex flex-col -translate-x-full h-full bg-primary-foreground transition z-10 ${
           collapsed
-            ? "md:fixed md:-translate-x-full -translate-x-0"
+            ? "md:fixed md:-translate-x-full translate-x-0"
             : "md:static md:-translate-x-0 -translate-x-full"
         }`}
       >

@@ -2,7 +2,6 @@ import { CashierSchema } from "@/src/entity/cashier-entity";
 import React, { useEffect, useState } from "react";
 import { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import AddItemForm from "./add-item-form";
 import { ProductEntity } from "@/src/entity/product-entity";
 import { TrashIcon } from "lucide-react";
 import {
@@ -27,23 +26,25 @@ import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 
 type Props = {
   fieldArray: UseFieldArrayReturn<z.infer<typeof CashierSchema>>;
-  products: ProductEntity[];
   form: UseFormReturn<z.infer<typeof CashierSchema>>;
+  products: ProductEntity[];
   paymentMethods: PaymentMethodEntity[];
 };
 
-export default function TransactionTable({
+export default function EditTransactionTable({
   fieldArray,
   products,
   form,
   paymentMethods,
 }: Props) {
-  const { append, remove, fields } = fieldArray;
-  const [potongan, setPotongan] = useState<number>(0);
+  const { fields } = fieldArray;
   const [paymentMethod, setPaymentMethod] = useState<string>(
-    String(paymentMethods?.find((pm) => pm.name === "Tunai")?.id!)
+    form.getValues("payment_method_id")
   );
-  const [bayar, setBayar] = useState<number>(0);
+  const potongan = form.getValues("discount");
+  const bayar = Number(form.getValues("payment_amount"));
+
+  const [sisaBayar, setSisaBayar] = useState<number>(0);
 
   const subtotal = fields.reduce((acc, item) => {
     const selectedProduct: any = products?.find(
@@ -53,16 +54,15 @@ export default function TransactionTable({
       acc + item.qty * selectedProduct?.[`harga_jual_${item.transaction_type}`]
     );
   }, 0);
+  const kembalian = bayar - (subtotal - potongan);
 
   useEffect(() => {
-    form.setValue("discount", potongan);
-    form.setValue("payment_amount", bayar);
-    form.setValue("payment_method_id", paymentMethod);
-  }, [potongan, paymentMethod, form, bayar]);
+    form.setValue("payment_amount", bayar + sisaBayar);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sisaBayar]);
 
   return (
     <>
-      <AddItemForm append={append} products={products} />
       {form.formState.errors.items?.message && (
         <p className="text-destructive">
           {form.formState.errors.items.message}
@@ -77,7 +77,6 @@ export default function TransactionTable({
             <TableHead>Tipe Harga</TableHead>
             <TableHead>Jumlah</TableHead>
             <TableHead className="text-right">Total</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -111,14 +110,6 @@ export default function TransactionTable({
                       )
                     )}
                   </TableCell>
-                  <TableCell className="text-center">
-                    <TrashIcon
-                      className="cursor-pointer text-destructive mx-auto"
-                      onClick={() => {
-                        remove(i);
-                      }}
-                    />
-                  </TableCell>
                 </TableRow>
               );
             })
@@ -148,10 +139,7 @@ export default function TransactionTable({
                 className="text-right"
                 type="text"
                 value={numberToRupiah(potongan)}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "");
-                  setPotongan(Number(value));
-                }}
+                disabled
               />
             </TableCell>
           </TableRow>
@@ -166,10 +154,7 @@ export default function TransactionTable({
           <TableRow>
             <TableCell colSpan={4}></TableCell>
             <TableCell className="text-right">
-              <Select
-                onValueChange={(value) => setPaymentMethod(String(value))}
-                value={paymentMethod}
-              >
+              <Select value={paymentMethod} disabled>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="-- Pilih Pelanggan --" />
                 </SelectTrigger>
@@ -187,10 +172,7 @@ export default function TransactionTable({
                 className="text-right"
                 type="text"
                 value={numberToRupiah(bayar)}
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "");
-                  setBayar(Number(value));
-                }}
+                disabled
               />
             </TableCell>
           </TableRow>
@@ -199,7 +181,24 @@ export default function TransactionTable({
               Kembalian
             </TableCell>
             <TableCell className="text-right">
-              <p>{numberToRupiah(bayar - (subtotal - potongan))}</p>
+              <p>{numberToRupiah(kembalian + sisaBayar)}</p>
+            </TableCell>
+          </TableRow>
+          <TableRow className="bg-accent">
+            <TableCell colSpan={5} className="text-right">
+              Masukkan Sisa Pembayaran
+            </TableCell>
+            <TableCell className="text-right">
+              <Input
+                className="text-right"
+                type="text"
+                value={numberToRupiah(sisaBayar)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  setSisaBayar(Number(value));
+                }}
+                disabled={kembalian >= 0}
+              />
             </TableCell>
           </TableRow>
         </TableFooter>

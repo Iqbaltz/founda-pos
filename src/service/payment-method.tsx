@@ -17,7 +17,8 @@ const getPaymentMethod = async (id: number) => {
 };
 
 const getPaymentMethodServer = async (id: number) => {
-  return await fetchWrapperServer.get(`/payment-method/${id}`);
+  const res = await fetchWrapperServer.get(`/payment-method/${id}`);
+  return res?.data as PaymentMethodEntity;
 };
 
 const addPaymentMethod = async (payload: PaymentMethodEntity) => {
