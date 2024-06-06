@@ -49,6 +49,7 @@ export default function AddItemForm({ append, products }: Props) {
   function onSubmit(data: z.infer<typeof CashierItemSchema>) {
     append(data);
     form.reset();
+    setSelectedPrice(undefined);
   }
 
   useEffect(() => {

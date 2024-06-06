@@ -41,8 +41,8 @@ export default function EditTransactionTable({
   const [paymentMethod, setPaymentMethod] = useState<string>(
     form.getValues("payment_method_id")
   );
-  const potongan = form.getValues("discount");
-  const bayar = Number(form.getValues("payment_amount"));
+  const [potongan, setPotongan] = useState(form.getValues("discount"));
+  const [bayar, setBayar] = useState(Number(form.getValues("payment_amount")));
 
   const [sisaBayar, setSisaBayar] = useState<number>(0);
 

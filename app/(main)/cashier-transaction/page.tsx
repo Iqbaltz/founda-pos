@@ -3,6 +3,8 @@ import { productService } from "@/src/service/product";
 import React, { Suspense } from "react";
 import CashierTransactionList from "./cashier-transaction-list.";
 
+export const dynamic = "force-dynamic";
+
 export default async function CashierTransactionPage() {
   const { getAllProductsServer } = productService;
 

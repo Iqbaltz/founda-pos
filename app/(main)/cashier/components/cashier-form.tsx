@@ -27,6 +27,7 @@ import { ProductEntity } from "@/src/entity/product-entity";
 import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   customers: CustomerEntity[];
@@ -39,6 +40,7 @@ export default function CashierForm({
   products,
   paymentMethods,
 }: Props) {
+  const router = useRouter();
   const session: any = useSession();
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
@@ -63,6 +65,7 @@ export default function CashierForm({
     if (res) {
       alert("Transaksi berhasil!");
       form.reset();
+      router.push("/cashier-transaction");
     }
   }
 

@@ -28,6 +28,7 @@ import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
 import { CanvasHTMLAttributes, useEffect } from "react";
 import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entity";
+import { useParams, useRouter } from "next/navigation";
 
 type Props = {
   transactionDetail: CashierTransactionEntity;
@@ -40,7 +41,10 @@ export default function EditCashierForm({
   products,
   paymentMethods,
 }: Props) {
+  const router = useRouter();
   const session: any = useSession();
+  const params = useParams();
+  const transactionId = params?.id;
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
@@ -65,14 +69,14 @@ export default function EditCashierForm({
   const { editTransaction } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
-    console.log("data", data);
-    // const res = await editTransaction({
-    //   ...data,
-    // });
-    // if (res) {
-    //   alert("Transaksi berhasil!");
-    //   form.reset();
-    // }
+    const res = await editTransaction(String(transactionId), {
+      ...data,
+    });
+    if (res) {
+      alert("Transaksi berhasil!");
+      form.reset();
+      router.push("/cashier-transaction");
+    }
   }
 
   useEffect(

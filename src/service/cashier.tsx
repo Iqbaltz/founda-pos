@@ -9,7 +9,7 @@ const addTransaction = async (payload: CashierEntity) => {
 };
 
 const editTransaction = async (id: string, payload: CashierEntity) => {
-  return await fetchWrapper.put(`/cashier-transaction/${id}`, payload);
+  return await fetchWrapper.post(`/cashier-transaction/${id}`, payload);
 };
 
 const getAllCashierTransactions = async (page: string) => {
