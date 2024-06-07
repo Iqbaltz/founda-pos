@@ -53,7 +53,7 @@ export default function AddItemForm({ append, products }: Props) {
   }
 
   useEffect(() => {
-    const selectedProduct: any = products.find(
+    const selectedProduct: any = products?.find(
       (product) => product.id === Number(form.getValues().barang_id)
     );
     if (!selectedProduct) return;

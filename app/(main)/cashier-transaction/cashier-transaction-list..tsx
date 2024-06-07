@@ -153,7 +153,7 @@ export default function CashierTransactionList({ products }: Props) {
           (acc, item) =>
             acc +
             item.qty *
-              (products.find((product) => product.id === item.barang_id)?.[
+              (products?.find((product) => product.id === item.barang_id)?.[
                 `harga_jual_${item.transaction_type as TransactionType}`
               ] || 0),
           0
