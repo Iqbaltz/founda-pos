@@ -12,6 +12,8 @@ import {
   User2Icon,
   UserCog,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import SidebarItem from "./sidebar-item";
 
 type Props = {};
 
@@ -69,7 +71,9 @@ const sidebarItems = [
 ];
 
 export default function Sidebar({}: Props) {
+  const pathname = usePathname();
   const { collapsed, setCollapsed } = useSidebarContext();
+
   return (
     <aside className="sticky top-0 z-50 h-screen flex">
       {collapsed ? (
@@ -102,14 +106,13 @@ export default function Sidebar({}: Props) {
               );
             } else {
               return (
-                <Link
+                <SidebarItem
                   key={index}
-                  href={item.link}
-                  className="px-4 py-3 text-foreground hover:bg-accent cursor-pointer flex items-center gap-2"
-                >
-                  {item?.icon && item?.icon}
-                  {item.name}
-                </Link>
+                  name={item?.name}
+                  url={item?.link}
+                  icon={item?.icon}
+                  isActive={pathname === item?.link}
+                />
               );
             }
           })}
