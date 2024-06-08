@@ -49,7 +49,7 @@ export default function EditCashierForm({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
-      customer_id: transactionDetail?.customer_id,
+      customer_id: String(transactionDetail?.customer_id),
       discount: Number(transactionDetail?.discount),
       payment_amount: transactionDetail?.payment_amount,
       payment_method_id: String(transactionDetail?.payment_method_id),
