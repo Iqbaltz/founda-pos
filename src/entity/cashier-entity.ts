@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CashierSchema = z.object({
   transaction_date: z.string(),
   cashier_id: z.string(),
-  customer_id: z.number(),
+  customer_id: z.string().nullable().optional(),
   payment_method_id: z.string(),
   payment_amount: z.number(),
   discount: z.number(),
@@ -21,7 +21,7 @@ export const CashierSchema = z.object({
 export const CashierItemSchema = z.object({
   barang_id: z.string().min(1, "Barang harus diisi"),
   transaction_type: z.string().min(1, "Tipe Harga harus diisi"),
-  qty: z.number().min(1, "Jumlah harus lebih dari 0"),
+  qty: z.number().min(0.1, "Jumlah harus lebih dari 0"),
 });
 
 export interface CashierItemEntity {
@@ -33,7 +33,7 @@ export interface CashierItemEntity {
 export interface CashierEntity {
   transaction_date: string;
   cashier_id: string;
-  customer_id: number;
+  customer_id?: string | null;
   payment_method_id: string;
   discount: number;
   payment_amount: number;

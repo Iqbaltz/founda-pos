@@ -46,7 +46,7 @@ export default function CashierForm({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
-      customer_id: customers?.find((customer) => customer.name === "UMUM")?.id,
+      customer_id: "0",
     },
   });
 
@@ -60,6 +60,7 @@ export default function CashierForm({
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
     const res = await addTransaction({
       ...data,
+      customer_id: data.customer_id === "0" ? null : data.customer_id,
     });
 
     if (res) {
@@ -108,6 +109,7 @@ export default function CashierForm({
                             {customer.name}
                           </SelectItem>
                         ))}
+                        <SelectItem value={"0"}>UMUM</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

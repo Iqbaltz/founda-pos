@@ -4,6 +4,8 @@ import PageHeader from "@/components/layout/page-header";
 import { productService } from "@/src/service/product";
 import { paymentMethodService } from "@/src/service/payment-method";
 
+export const dynamic = "force-dynamic";
+
 export default async function CashierPage() {
   const { getAllCustomerServer } = customerService;
   const { getAllProductsServer } = productService;

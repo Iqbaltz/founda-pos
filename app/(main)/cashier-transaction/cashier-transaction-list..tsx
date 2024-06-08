@@ -91,7 +91,7 @@ export default function CashierTransactionList({ products }: Props) {
           </Button>
         );
       },
-      accessorKey: "customer.name",
+      accessorKey: "customer_name",
     },
     {
       header: ({ column }) => {
