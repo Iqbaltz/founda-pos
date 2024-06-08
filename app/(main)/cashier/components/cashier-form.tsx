@@ -140,8 +140,13 @@ export default function CashierForm({
           form={form}
           paymentMethods={paymentMethods}
         />
-        <div className="flex justify-end" onClick={form.handleSubmit(onSubmit)}>
-          <Button>Submit Transaksi</Button>
+        <div className="flex justify-end">
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={form?.formState?.isSubmitting}
+          >
+            Submit Transaksi
+          </Button>
         </div>
       </div>
     </>

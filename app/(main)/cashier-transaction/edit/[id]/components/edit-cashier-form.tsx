@@ -49,7 +49,9 @@ export default function EditCashierForm({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
       transaction_date: new Date().toISOString().split("T")[0],
-      customer_id: String(transactionDetail?.customer_id),
+      customer_id: transactionDetail?.customer_id
+        ? String(transactionDetail?.customer_id)
+        : null,
       discount: Number(transactionDetail?.discount),
       payment_amount: transactionDetail?.payment_amount,
       payment_method_id: String(transactionDetail?.payment_method_id),
@@ -60,6 +62,7 @@ export default function EditCashierForm({
       })),
     },
   });
+  const isPaid = transactionDetail?.payment_status === 1;
 
   const fieldArray = useFieldArray({
     control: form.control,
@@ -69,13 +72,17 @@ export default function EditCashierForm({
   const { editTransaction } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
-    const res = await editTransaction(String(transactionId), {
-      ...data,
-    });
-    if (res) {
-      alert("Transaksi berhasil!");
-      form.reset();
-      router.push("/cashier-transaction");
+    if (!isPaid) {
+      const res = await editTransaction(String(transactionId), {
+        ...data,
+      });
+      if (res) {
+        alert("Transaksi berhasil!");
+        form.reset();
+        router.push("/cashier-transaction");
+      }
+    } else {
+      alert("Transaksi sudah lunas!");
     }
   }
 
@@ -146,9 +153,15 @@ export default function EditCashierForm({
           form={form}
           products={products}
           paymentMethods={paymentMethods}
+          isDisabled={isPaid}
         />
-        <div className="flex justify-end" onClick={form.handleSubmit(onSubmit)}>
-          <Button>Bayar Sisa</Button>
+        <div className="flex justify-end">
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={form?.formState?.isSubmitting || isPaid}
+          >
+            Bayar Sisa
+          </Button>
         </div>
       </div>
     </>

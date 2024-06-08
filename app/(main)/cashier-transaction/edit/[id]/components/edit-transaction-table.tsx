@@ -29,6 +29,7 @@ type Props = {
   form: UseFormReturn<z.infer<typeof CashierSchema>>;
   products: ProductEntity[];
   paymentMethods: PaymentMethodEntity[];
+  isDisabled?: boolean;
 };
 
 export default function EditTransactionTable({
@@ -36,6 +37,7 @@ export default function EditTransactionTable({
   products,
   form,
   paymentMethods,
+  isDisabled,
 }: Props) {
   const { fields } = fieldArray;
   const [paymentMethod, setPaymentMethod] = useState<string>(
@@ -197,7 +199,7 @@ export default function EditTransactionTable({
                   const value = e.target.value.replace(/\D/g, "");
                   setSisaBayar(Number(value));
                 }}
-                disabled={kembalian >= 0}
+                disabled={kembalian >= 0 || isDisabled}
               />
             </TableCell>
           </TableRow>
