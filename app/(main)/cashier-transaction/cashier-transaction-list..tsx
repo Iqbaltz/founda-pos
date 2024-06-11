@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, DownloadIcon, EditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { cashierService } from "@/src/service/cashier";
 import { ProductEntity } from "@/src/entity/product-entity";
 import { TransactionType } from "@/src/helpers/constants";
 import { numberToRupiah } from "@/src/helpers/numberToRupiah";
+import { saveAs } from "file-saver";
 
 type Props = {
   products: ProductEntity[];
@@ -24,7 +25,7 @@ export default function CashierTransactionList({ products }: Props) {
   const queryPage = searchParams.get("page");
   const [cashierTransactions, setCashierTransactions] =
     useState<PaginatedModel<CashierTransactionEntity>>(emptyPagination);
-  const { getAllCashierTransactions } = cashierService;
+  const { getAllCashierTransactions, printReceipt } = cashierService;
 
   const fetchCashierTransactions = async (page: string | null) => {
     const data = await getAllCashierTransactions(String(page || 1));
@@ -212,10 +213,17 @@ export default function CashierTransactionList({ products }: Props) {
       header: "Action",
       accessorKey: "",
       cell: ({ row }) => (
-        <div className="flex justify-center">
+        <div className="flex justify-center gap-2">
           <Link href={`./cashier-transaction/edit/${row?.original?.id}`}>
             <EditIcon size={18} className="text-yellow-500" />
           </Link>
+          <DownloadIcon
+            size={18}
+            className="cursor-pointer text-green-500"
+            onClick={async () => {
+              await printReceipt(row?.original?.id);
+            }}
+          />
         </div>
       ),
     },

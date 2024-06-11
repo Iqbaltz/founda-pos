@@ -97,10 +97,32 @@ const remove = async (url: string) => {
   }
 };
 
+const download = async (url: string, filename: string) => {
+  try {
+    const res = await xios.get(url, { responseType: "blob" });
+    const blob = new Blob([res.data], { type: res.data.type });
+    const urlRes = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = urlRes;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    link?.parentNode?.removeChild(link);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
+    console.error(error);
+  }
+};
+
 export const fetchWrapper = {
   get,
   post,
   put,
   remove,
   auth,
+  download,
 };

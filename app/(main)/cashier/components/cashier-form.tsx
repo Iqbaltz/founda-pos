@@ -94,7 +94,7 @@ export default function CashierForm({
                   <FormLabel>Nama Pelanggan</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
+                      onValueChange={field.onChange}
                       value={String(field.value)}
                     >
                       <SelectTrigger className="w-full">

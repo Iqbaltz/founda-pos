@@ -23,9 +23,17 @@ const getCashierTransactionServer = async (id: string) => {
   return res.data as CashierTransactionEntity;
 };
 
+const printReceipt = async (id: number) => {
+  await fetchWrapper.download(
+    `/cashier-transaction/print-receipt/${id}`,
+    "receipt.pdf"
+  );
+};
+
 export const cashierService = {
   addTransaction,
   editTransaction,
   getAllCashierTransactions,
   getCashierTransactionServer,
+  printReceipt,
 };
