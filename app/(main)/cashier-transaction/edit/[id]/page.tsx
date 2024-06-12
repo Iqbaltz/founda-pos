@@ -22,7 +22,7 @@ export default async function EditCashierTransactionPage({ params }: Props) {
 
   return (
     <div>
-      <PageHeader title="Detail Transaksi" />
+      <PageHeader title={transactionDetail?.transaction_number} />
       <EditCashierForm
         transactionDetail={transactionDetail}
         products={products}

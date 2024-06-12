@@ -221,7 +221,10 @@ export default function CashierTransactionList({ products }: Props) {
             size={18}
             className="cursor-pointer text-green-500"
             onClick={async () => {
-              await printReceipt(row?.original?.id);
+              await printReceipt(
+                row?.original?.id,
+                row?.original?.transaction_number
+              );
             }}
           />
         </div>
