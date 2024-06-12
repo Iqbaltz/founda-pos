@@ -42,13 +42,12 @@ export default function AddItemForm({ append, products }: Props) {
     defaultValues: {
       barang_id: "",
       transaction_type: "",
-      qty: 0,
     },
   });
 
   function onSubmit(data: z.infer<typeof CashierItemSchema>) {
     append(data);
-    form.reset();
+    form.reset({ qty: undefined });
     setSelectedPrice(undefined);
   }
 
@@ -138,6 +137,7 @@ export default function AddItemForm({ append, products }: Props) {
                   <FormControl>
                     <Input
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => {
                         field.onChange(Number(e.target.value));
                       }}
@@ -153,7 +153,7 @@ export default function AddItemForm({ append, products }: Props) {
               placeholder="Total"
               readOnly
               value={numberToRupiah(
-                Number(selectedPrice || 0) * Number(form.watch().qty)
+                Number(selectedPrice || 0) * Number(form.watch().qty || 0)
               )}
             />
             <div className="w-[40%]"></div>

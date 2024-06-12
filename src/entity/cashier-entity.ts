@@ -21,7 +21,11 @@ export const CashierSchema = z.object({
 export const CashierItemSchema = z.object({
   barang_id: z.string().min(1, "Barang harus diisi"),
   transaction_type: z.string().min(1, "Tipe Harga harus diisi"),
-  qty: z.number().min(0.1, "Jumlah harus lebih dari 0"),
+  qty: z
+    .number({
+      required_error: "Jumlah harus diisi",
+    })
+    .min(0.1, "Jumlah harus lebih dari 0"),
 });
 
 export interface CashierItemEntity {

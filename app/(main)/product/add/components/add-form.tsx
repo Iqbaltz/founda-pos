@@ -37,10 +37,8 @@ export default function AddForm({}: Props) {
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       name: "",
-      category_id: null,
       hitung_stok: false,
       harga_modal: 0,
-      harga_jual_satuan: 0,
       harga_jual_grosir: 0,
       harga_jual_reseller: 0,
       stok: 0,
