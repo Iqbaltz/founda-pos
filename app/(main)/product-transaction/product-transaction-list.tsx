@@ -2,7 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,12 +20,12 @@ import { ProductTransactionEntity } from "@/src/entity/product-transaction-entit
 import { productTransactionService } from "@/src/service/product-transaction";
 import { PaginatedDataTable } from "@/components/ui/paginated-data-table";
 import PaginatedModel, { emptyPagination } from "@/src/helpers/pagination";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import debounce from "lodash.debounce";
 
 type Props = {};
 
 export default function ProductTransactionList({}: Props) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const queryPage = searchParams.get("page");
   const [productTransactions, setProductTransactions] =
@@ -33,29 +33,18 @@ export default function ProductTransactionList({}: Props) {
   const { getAllProductTransactions, deleteProductTransaction } =
     productTransactionService;
 
-  const fetchProductTransactions = async (page: string | null) => {
-    const data = await getAllProductTransactions(String(page || 1));
-    setProductTransactions(data);
-  };
-
-  useEffect(() => {
-    fetchProductTransactions(queryPage);
-  }, [queryPage]);
+  const fetchProductTransactions = debounce(
+    async (page: number, key: string) => {
+      const data = await getAllProductTransactions(String(page || 1), key);
+      setProductTransactions(data);
+    },
+    500
+  );
 
   const columns: ColumnDef<ProductTransactionEntity>[] = [
     {
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      accessorKey: "id",
+      header: "Index",
+      cell: (info) => info.row.index + 1,
     },
     {
       header: ({ column }) => {
@@ -177,7 +166,7 @@ export default function ProductTransactionList({}: Props) {
                     );
                     if (res) {
                       alert("Transaksi berhasil dihapus");
-                      fetchProductTransactions(queryPage);
+                      fetchProductTransactions(1, "");
                     }
                   }}
                 >
@@ -196,7 +185,12 @@ export default function ProductTransactionList({}: Props) {
       columns={columns}
       data={productTransactions}
       addLink="./product-transaction/add"
-      onPageChange={(page) => router.push(`/product-transaction?page=${page}`)}
+      onPageChange={(page, searchKey) =>
+        fetchProductTransactions(page, searchKey)
+      }
+      onSearch={(key) => {
+        fetchProductTransactions(1, key);
+      }}
     />
   );
 }

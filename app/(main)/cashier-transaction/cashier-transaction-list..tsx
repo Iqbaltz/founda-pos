@@ -14,6 +14,7 @@ import { ProductEntity } from "@/src/entity/product-entity";
 import { TransactionType } from "@/src/helpers/constants";
 import { numberToRupiah } from "@/src/helpers/numberToRupiah";
 import { saveAs } from "file-saver";
+import debounce from "lodash.debounce";
 
 type Props = {
   products: ProductEntity[];
@@ -23,18 +24,18 @@ export default function CashierTransactionList({ products }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryPage = searchParams.get("page");
+  const querySearch = searchParams.get("s");
   const [cashierTransactions, setCashierTransactions] =
     useState<PaginatedModel<CashierTransactionEntity>>(emptyPagination);
   const { getAllCashierTransactions, printReceipt } = cashierService;
 
-  const fetchCashierTransactions = async (page: string | null) => {
-    const data = await getAllCashierTransactions(String(page || 1));
-    setCashierTransactions(data);
-  };
-
-  useEffect(() => {
-    fetchCashierTransactions(queryPage);
-  }, [queryPage]);
+  const fetchCashierTransactions = debounce(
+    async (page: number, key: string) => {
+      const data = await getAllCashierTransactions(String(page || 1), key);
+      setCashierTransactions(data);
+    },
+    500
+  );
 
   const columns: ColumnDef<CashierTransactionEntity>[] = [
     {
@@ -106,7 +107,7 @@ export default function CashierTransactionList({ products }: Props) {
           </Button>
         );
       },
-      accessorKey: "transaction_items",
+      accessorKey: "id",
       cell: ({ row }) => {
         const allQuantity = row.original.transaction_items.reduce(
           (acc, item) => acc + item.qty,
@@ -233,8 +234,12 @@ export default function CashierTransactionList({ products }: Props) {
     <PaginatedDataTable
       columns={columns}
       data={cashierTransactions}
-      addLink="./cashier-transaction/add"
-      onPageChange={(page) => router.push(`/cashier-transaction?page=${page}`)}
+      onPageChange={(page, searchKey) =>
+        fetchCashierTransactions(page, searchKey)
+      }
+      onSearch={(key) => {
+        fetchCashierTransactions(1, key);
+      }}
     />
   );
 }

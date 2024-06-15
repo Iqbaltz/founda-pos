@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
 import CustomPagination from "./custom-pagination";
 import { formatCurrency } from "@/src/helpers/utils";
@@ -30,7 +30,8 @@ import { formatCurrency } from "@/src/helpers/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: PaginatedModel<TData>;
-  onPageChange: (pageNumber: number) => void;
+  onPageChange: (pageNumber: number, key: string) => void;
+  onSearch: (key: string) => void;
   addLink?: string;
   name?: string;
 }
@@ -39,9 +40,11 @@ export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
   onPageChange,
+  onSearch,
   addLink,
   name,
 }: DataTableProps<TData, TValue>) {
+  const [searchKey, setSearchKey] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -55,11 +58,23 @@ export function PaginatedDataTable<TData, TValue>({
       sorting,
     },
   });
+  const search = (key: string) => {
+    onSearch(key);
+  };
+
+  useEffect(() => {
+    search(searchKey);
+  }, [searchKey]);
 
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
-        <Input placeholder="Cari..." className="max-w-sm" />
+        <Input
+          placeholder="Cari..."
+          className="max-w-sm"
+          value={searchKey}
+          onChange={(e) => setSearchKey(e.target.value)}
+        />
         {addLink && (
           <Link href={addLink}>
             <Button
@@ -150,7 +165,10 @@ export function PaginatedDataTable<TData, TValue>({
           </span>
         </div>
         <div className="flex space-x-2">
-          <CustomPagination data={data} onPageChange={onPageChange} />
+          <CustomPagination
+            data={data}
+            onPageChange={(page) => onPageChange(page, searchKey)}
+          />
         </div>
       </div>
     </div>

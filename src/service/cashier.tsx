@@ -12,8 +12,10 @@ const editTransaction = async (id: string, payload: CashierEntity) => {
   return await fetchWrapper.post(`/cashier-transaction/${id}`, payload);
 };
 
-const getAllCashierTransactions = async (page: string) => {
-  const res = await fetchWrapper.get(`/cashier-transaction?page=${page}`);
+const getAllCashierTransactions = async (page: string, searchKey: string) => {
+  const res = await fetchWrapper.get(
+    `/cashier-transaction?page=${page}&search=${searchKey}`
+  );
   res.data["summary"] = res.summary;
   return res?.data as PaginatedModel<CashierTransactionEntity>;
 };

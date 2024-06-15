@@ -3,8 +3,10 @@ import { fetchWrapper } from "../helpers/fetch-wrapper";
 import { fetchWrapperServer } from "../helpers/fetch-wrapper-server";
 import PaginatedModel from "../helpers/pagination";
 
-const getAllProductTransactions = async (page: string) => {
-  const res = await fetchWrapper.get(`/barang-transaction?page=${page}`);
+const getAllProductTransactions = async (page: string, searchKey: string) => {
+  const res = await fetchWrapper.get(
+    `/barang-transaction?page=${page}&search=${searchKey}`
+  );
   res.data["summary"] = res.summary;
   return res?.data as PaginatedModel<ProductTransactionEntity>;
 };
