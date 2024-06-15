@@ -5,7 +5,8 @@ import { fetchWrapperServer } from "../helpers/fetch-wrapper-server";
 import PaginatedModel from "../helpers/pagination";
 
 const addTransaction = async (payload: CashierEntity) => {
-  return await fetchWrapper.post("/cashier-transaction", payload);
+  const res = await fetchWrapper.post("/cashier-transaction", payload);
+  return res?.data as CashierTransactionEntity;
 };
 
 const editTransaction = async (id: string, payload: CashierEntity) => {

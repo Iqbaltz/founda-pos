@@ -55,7 +55,7 @@ export default function CashierForm({
     name: "items",
   });
 
-  const { addTransaction } = cashierService;
+  const { addTransaction, printReceipt } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
     const res = await addTransaction({
@@ -64,8 +64,9 @@ export default function CashierForm({
     });
 
     if (res) {
-      alert("Transaksi berhasil!");
+      await printReceipt(res?.id, res?.transaction_number);
       form.reset();
+      alert("Transaksi berhasil!");
       router.push("/cashier-transaction");
     }
   }
