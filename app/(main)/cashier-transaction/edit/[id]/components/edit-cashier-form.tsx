@@ -29,6 +29,7 @@ import { useSession } from "next-auth/react";
 import { CanvasHTMLAttributes, useEffect } from "react";
 import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entity";
 import { useParams, useRouter } from "next/navigation";
+import { DownloadIcon } from "lucide-react";
 
 type Props = {
   transactionDetail: CashierTransactionEntity;
@@ -44,6 +45,7 @@ export default function EditCashierForm({
   const router = useRouter();
   const session: any = useSession();
   const params = useParams();
+  const { printReceipt } = cashierService;
   const transactionId = params?.id;
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
@@ -85,6 +87,13 @@ export default function EditCashierForm({
       alert("Transaksi sudah lunas!");
     }
   }
+
+  const handlePrintReceipt = async () => {
+    await printReceipt(
+      Number(transactionId),
+      transactionDetail?.transaction_number
+    );
+  };
 
   useEffect(
     () => {
@@ -155,7 +164,15 @@ export default function EditCashierForm({
           paymentMethods={paymentMethods}
           isDisabled={isPaid}
         />
-        <div className="flex justify-end">
+        <div className="flex fap justify-end">
+          <Button
+            onClick={handlePrintReceipt}
+            className="mr-4"
+            variant={"secondary"}
+          >
+            <DownloadIcon className="mr-2 w-4" />
+            Download Invoice
+          </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
             disabled={form?.formState?.isSubmitting || isPaid}
