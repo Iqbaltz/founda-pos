@@ -2,10 +2,10 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -30,8 +30,7 @@ import { formatCurrency } from "@/src/helpers/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: PaginatedModel<TData>;
-  onPageChange: (pageNumber: number, key: string) => void;
-  onSearch: (key: string) => void;
+  onChange: (pageNumber: number, key: string, sorts: SortingState) => void;
   addLink?: string;
   name?: string;
 }
@@ -39,8 +38,7 @@ interface DataTableProps<TData, TValue> {
 export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
-  onPageChange,
-  onSearch,
+  onChange,
   addLink,
   name,
 }: DataTableProps<TData, TValue>) {
@@ -58,13 +56,10 @@ export function PaginatedDataTable<TData, TValue>({
       sorting,
     },
   });
-  const search = (key: string) => {
-    onSearch(key);
-  };
 
   useEffect(() => {
-    search(searchKey);
-  }, [searchKey]);
+    onChange(1, searchKey, sorting);
+  }, [searchKey, sorting]);
 
   return (
     <div>
@@ -167,7 +162,7 @@ export function PaginatedDataTable<TData, TValue>({
         <div className="flex space-x-2">
           <CustomPagination
             data={data}
-            onPageChange={(page) => onPageChange(page, searchKey)}
+            onPageChange={(page) => onChange(page, searchKey, sorting)}
           />
         </div>
       </div>

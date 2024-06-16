@@ -1,5 +1,5 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingState } from "@tanstack/react-table";
 import { ArrowUpDown, DownloadIcon, EditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -21,23 +21,28 @@ type Props = {
 };
 
 export default function CashierTransactionList({ products }: Props) {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const queryPage = searchParams.get("page");
-  const querySearch = searchParams.get("s");
   const [cashierTransactions, setCashierTransactions] =
     useState<PaginatedModel<CashierTransactionEntity>>(emptyPagination);
   const { getAllCashierTransactions, printReceipt } = cashierService;
 
   const fetchCashierTransactions = debounce(
-    async (page: number, key: string) => {
-      const data = await getAllCashierTransactions(String(page || 1), key);
+    async (page: number, key: string, sorts: SortingState) => {
+      const data = await getAllCashierTransactions(
+        String(page || 1),
+        key,
+        sorts
+      );
       setCashierTransactions(data);
     },
     500
   );
 
   const columns: ColumnDef<CashierTransactionEntity>[] = [
+    {
+      header: "Index",
+      cell: (info) => info.row.index + 1,
+    },
     {
       header: ({ column }) => {
         return (
@@ -79,7 +84,8 @@ export default function CashierTransactionList({ products }: Props) {
           </Button>
         );
       },
-      accessorKey: "cashier.name",
+      accessorKey: "cashier_id",
+      cell: ({ row }) => row.original.cashier.name,
     },
     {
       header: ({ column }) => {
@@ -107,7 +113,7 @@ export default function CashierTransactionList({ products }: Props) {
           </Button>
         );
       },
-      accessorKey: "id",
+      accessorKey: "total_items",
       cell: ({ row }) => {
         const allQuantity = row.original.transaction_items.reduce(
           (acc, item) => acc + item.qty,
@@ -149,15 +155,10 @@ export default function CashierTransactionList({ products }: Props) {
           </Button>
         );
       },
-      accessorKey: "transaction_items",
+      accessorKey: "total_payment",
       cell: ({ row }) => {
         const allPrice = row.original.transaction_items.reduce(
-          (acc, item) =>
-            acc +
-            item.qty *
-              (products?.find((product) => product.id === item.barang_id)?.[
-                `harga_jual_${item.transaction_type as TransactionType}`
-              ] || 0),
+          (acc, item) => acc + item.qty * item.price_per_barang,
           0
         );
         return (
@@ -237,12 +238,9 @@ export default function CashierTransactionList({ products }: Props) {
     <PaginatedDataTable
       columns={columns}
       data={cashierTransactions}
-      onPageChange={(page, searchKey) =>
-        fetchCashierTransactions(page, searchKey)
+      onChange={(page, searchKey, sorts) =>
+        fetchCashierTransactions(page, searchKey, sorts)
       }
-      onSearch={(key) => {
-        fetchCashierTransactions(1, key);
-      }}
     />
   );
 }

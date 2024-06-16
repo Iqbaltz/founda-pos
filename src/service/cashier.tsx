@@ -1,3 +1,4 @@
+import { SortingState } from "@tanstack/react-table";
 import { CashierEntity } from "../entity/cashier-entity";
 import { CashierTransactionEntity } from "../entity/cashier-transaction-entity";
 import { fetchWrapper } from "../helpers/fetch-wrapper";
@@ -12,10 +13,16 @@ const editTransaction = async (id: string, payload: CashierEntity) => {
   return await fetchWrapper.post(`/cashier-transaction/${id}`, payload);
 };
 
-const getAllCashierTransactions = async (page: string, searchKey: string) => {
-  const res = await fetchWrapper.get(
-    `/cashier-transaction?page=${page}&search=${searchKey}`
-  );
+const getAllCashierTransactions = async (
+  page: string,
+  searchKey: string,
+  sorts: SortingState
+) => {
+  const res = await fetchWrapper.get(`/cashier-transaction`, {
+    page,
+    search: searchKey,
+    orders: sorts,
+  });
   res.data["summary"] = res.summary;
   return res?.data as PaginatedModel<CashierTransactionEntity>;
 };
