@@ -1,8 +1,8 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingState } from "@tanstack/react-table";
 import { ArrowUpDown, EditIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,42 +20,32 @@ import { ProductTransactionEntity } from "@/src/entity/product-transaction-entit
 import { productTransactionService } from "@/src/service/product-transaction";
 import { PaginatedDataTable } from "@/components/ui/paginated-data-table";
 import PaginatedModel, { emptyPagination } from "@/src/helpers/pagination";
-import { useRouter, useSearchParams } from "next/navigation";
+import debounce from "lodash.debounce";
 
 type Props = {};
 
 export default function ProductTransactionList({}: Props) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const queryPage = searchParams.get("page");
   const [productTransactions, setProductTransactions] =
     useState<PaginatedModel<ProductTransactionEntity>>(emptyPagination);
   const { getAllProductTransactions, deleteProductTransaction } =
     productTransactionService;
 
-  const fetchProductTransactions = async (page: string | null) => {
-    const data = await getAllProductTransactions(String(page || 1));
-    setProductTransactions(data);
-  };
-
-  useEffect(() => {
-    fetchProductTransactions(queryPage);
-  }, [queryPage]);
+  const fetchProductTransactions = debounce(
+    async (page: number, key: string, sorts: SortingState) => {
+      const data = await getAllProductTransactions(
+        String(page || 1),
+        key,
+        sorts
+      );
+      setProductTransactions(data);
+    },
+    500
+  );
 
   const columns: ColumnDef<ProductTransactionEntity>[] = [
     {
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Id
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-      accessorKey: "id",
+      header: "Index",
+      cell: (info) => info.row.index + 1,
     },
     {
       header: ({ column }) => {
@@ -84,7 +74,8 @@ export default function ProductTransactionList({}: Props) {
           </Button>
         );
       },
-      accessorKey: "barang.name",
+      accessorKey: "barang_id",
+      cell: ({ row }) => row.original?.barang?.name,
     },
     {
       header: ({ column }) => {
@@ -98,7 +89,8 @@ export default function ProductTransactionList({}: Props) {
           </Button>
         );
       },
-      accessorKey: "supplier.name",
+      accessorKey: "supplier_id",
+      cell: ({ row }) => row.original?.supplier?.name,
     },
     {
       header: ({ column }) => {
@@ -136,7 +128,7 @@ export default function ProductTransactionList({}: Props) {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Jumlah
+            Total
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -177,7 +169,7 @@ export default function ProductTransactionList({}: Props) {
                     );
                     if (res) {
                       alert("Transaksi berhasil dihapus");
-                      fetchProductTransactions(queryPage);
+                      fetchProductTransactions(1, "", []);
                     }
                   }}
                 >
@@ -196,7 +188,9 @@ export default function ProductTransactionList({}: Props) {
       columns={columns}
       data={productTransactions}
       addLink="./product-transaction/add"
-      onPageChange={(page) => router.push(`/product-transaction?page=${page}`)}
+      onChange={(page, searchKey, sorts) =>
+        fetchProductTransactions(page, searchKey, sorts)
+      }
     />
   );
 }

@@ -56,6 +56,7 @@ export function CustomPagination({
 
   pages.unshift(
     <Button
+      key="prev"
       variant="outline"
       size="sm"
       onClick={() => onPageChange(data.current_page - 1)}
@@ -67,6 +68,7 @@ export function CustomPagination({
 
   pages.push(
     <Button
+      key="next"
       variant="outline"
       size="sm"
       onClick={() => onPageChange(data.current_page + 1)}
