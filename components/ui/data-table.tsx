@@ -2,13 +2,16 @@
 
 import {
   ColumnDef,
+  FilterFn,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 import {
   Table,
@@ -30,6 +33,18 @@ interface DataTableProps<TData, TValue> {
   addLink?: string;
   name?: string;
 }
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -38,23 +53,35 @@ export function DataTable<TData, TValue>({
   name,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [searchKey, setSearchKey] = useState<string>("");
 
   const table = useReactTable({
     data,
     columns,
+    filterFns: {
+      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onGlobalFilterChange: setSearchKey,
     state: {
       sorting,
+      globalFilter: searchKey,
     },
   });
 
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
-        <Input placeholder="Cari..." className="max-w-sm" />
+        <Input
+          placeholder="Cari..."
+          className="max-w-sm"
+          value={searchKey}
+          onChange={(e) => setSearchKey(e.target.value)}
+        />
         {addLink && (
           <Link href={addLink}>
             <Button
