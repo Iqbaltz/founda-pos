@@ -35,9 +35,9 @@ const auth = async (url: string, body: any) => {
   return res.data;
 };
 
-const get = async (url: string) => {
+const get = async (url: string, params?: Record<string, any>) => {
   try {
-    const res = await xios.get(url);
+    const res = await xios.get(url, { params });
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

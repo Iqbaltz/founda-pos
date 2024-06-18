@@ -2,10 +2,10 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -22,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
 import CustomPagination from "./custom-pagination";
 import { formatCurrency } from "@/src/helpers/utils";
@@ -30,7 +30,7 @@ import { formatCurrency } from "@/src/helpers/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: PaginatedModel<TData>;
-  onPageChange: (pageNumber: number) => void;
+  onChange: (pageNumber: number, key: string, sorts: SortingState) => void;
   addLink?: string;
   name?: string;
 }
@@ -38,10 +38,11 @@ interface DataTableProps<TData, TValue> {
 export function PaginatedDataTable<TData, TValue>({
   columns,
   data,
-  onPageChange,
+  onChange,
   addLink,
   name,
 }: DataTableProps<TData, TValue>) {
+  const [searchKey, setSearchKey] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -56,10 +57,19 @@ export function PaginatedDataTable<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    onChange(1, searchKey, sorting);
+  }, [searchKey, sorting]);
+
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
-        <Input placeholder="Cari..." className="max-w-sm" />
+        <Input
+          placeholder="Cari..."
+          className="max-w-sm"
+          value={searchKey}
+          onChange={(e) => setSearchKey(e.target.value)}
+        />
         {addLink && (
           <Link href={addLink}>
             <Button
@@ -150,7 +160,10 @@ export function PaginatedDataTable<TData, TValue>({
           </span>
         </div>
         <div className="flex space-x-2">
-          <CustomPagination data={data} onPageChange={onPageChange} />
+          <CustomPagination
+            data={data}
+            onPageChange={(page) => onChange(page, searchKey, sorting)}
+          />
         </div>
       </div>
     </div>
