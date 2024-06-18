@@ -23,7 +23,13 @@ import { PlusIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { UseFieldArrayAppend, useForm } from "react-hook-form";
 import { z } from "zod";
+import ReactSelect from "react-select";
 
+const options = [
+  { value: "chocolate", label: "Chocolate" },
+  { value: "strawberry", label: "Strawberry" },
+  { value: "vanilla", label: "Vanilla" },
+];
 type Props = {
   append: UseFieldArrayAppend<z.infer<typeof CashierSchema>>;
   products: ProductEntity[];
@@ -42,13 +48,12 @@ export default function AddItemForm({ append, products }: Props) {
     defaultValues: {
       barang_id: "",
       transaction_type: "",
-      qty: 0,
     },
   });
 
   function onSubmit(data: z.infer<typeof CashierItemSchema>) {
     append(data);
-    form.reset();
+    form.reset({ qty: undefined });
     setSelectedPrice(undefined);
   }
 
@@ -73,26 +78,39 @@ export default function AddItemForm({ append, products }: Props) {
               control={form.control}
               name="barang_id"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-[150%]">
                   <FormControl>
-                    <Select
-                      onValueChange={(value) => field.onChange(String(value))}
-                      value={field.value}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="-- Pilih Barang --" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {products?.map((product) => (
-                          <SelectItem
-                            key={product.id}
-                            value={String(product.id!)}
-                          >
-                            {product.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ReactSelect
+                      isClearable
+                      classNames={{
+                        control: (state) =>
+                          "!bg-transparent !border-accent !rounded-md !p-[1px]",
+                        menuList: (state) => "bg-primary-foreground",
+                        option: (state) =>
+                          state.isFocused
+                            ? "!bg-accent"
+                            : "hover:!bg-primary-foreground",
+                        singleValue: (state) => "!text-foreground",
+                        input: (state) =>
+                          "!caret-foreground !text-foreground hover:cursor-text",
+                      }}
+                      options={
+                        products?.map((product) => ({
+                          value: String(product.id),
+                          label: product.name,
+                        })) || []
+                      }
+                      onChange={(value) => {
+                        field.onChange(String(value?.value));
+                      }}
+                      value={{
+                        label: products?.find(
+                          (product) => product.id === Number(field.value)
+                        )?.name,
+                        value: field.value,
+                      }}
+                      onBlur={field?.onBlur}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,6 +156,7 @@ export default function AddItemForm({ append, products }: Props) {
                   <FormControl>
                     <Input
                       {...field}
+                      value={field.value || ""}
                       onChange={(e) => {
                         field.onChange(Number(e.target.value));
                       }}
@@ -153,7 +172,7 @@ export default function AddItemForm({ append, products }: Props) {
               placeholder="Total"
               readOnly
               value={numberToRupiah(
-                Number(selectedPrice || 0) * Number(form.watch().qty)
+                Number(selectedPrice || 0) * Number(form.watch().qty || 0)
               )}
             />
             <div className="w-[40%]"></div>
