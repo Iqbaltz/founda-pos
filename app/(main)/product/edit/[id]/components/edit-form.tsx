@@ -29,7 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 type Props = {
   name: string;
-  category_id: number | null;
+  category_id: number | undefined;
   hitung_stok: boolean;
   harga_modal: number;
   harga_jual_satuan: number;
