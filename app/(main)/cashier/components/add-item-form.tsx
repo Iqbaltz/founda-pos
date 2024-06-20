@@ -24,6 +24,7 @@ import React, { useEffect, useState } from "react";
 import { UseFieldArrayAppend, useForm } from "react-hook-form";
 import { z } from "zod";
 import ReactSelect from "react-select";
+import Autocomplete from "@/components/ui/autocomplete";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -80,27 +81,15 @@ export default function AddItemForm({ append, products }: Props) {
               render={({ field }) => (
                 <FormItem className="w-[150%]">
                   <FormControl>
-                    <ReactSelect
+                    <Autocomplete
                       isClearable
-                      classNames={{
-                        control: (state) =>
-                          "!bg-transparent !border-accent !rounded-md !p-[1px]",
-                        menuList: (state) => "bg-primary-foreground",
-                        option: (state) =>
-                          state.isFocused
-                            ? "!bg-accent"
-                            : "hover:!bg-primary-foreground",
-                        singleValue: (state) => "!text-foreground",
-                        input: (state) =>
-                          "!caret-foreground !text-foreground hover:cursor-text",
-                      }}
                       options={
                         products?.map((product) => ({
                           value: String(product.id),
                           label: product.name,
                         })) || []
                       }
-                      onChange={(value) => {
+                      onChange={(value: any) => {
                         field.onChange(String(value?.value));
                       }}
                       value={{
