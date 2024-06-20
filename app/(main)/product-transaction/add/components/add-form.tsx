@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { changeDateTimeToNow } from "@/src/helpers/utils";
+import Autocomplete from "@/components/ui/autocomplete";
 
 type Props = {};
 
@@ -87,14 +88,16 @@ export default function AddForm({}: Props) {
     fetchSuppliers();
   }, []);
 
-  const selectProduct = (
-    field: ControllerRenderProps<ProductTransactionEntity, "barang_id">,
-    value: string
-  ) => {
-    const product = products?.find((product) => String(product.id) === value);
-    form.setValue("harga_beli", product ? product.harga_modal : 0);
-    return field.onChange(Number(value));
-  };
+  const handleChangeProduct =
+    (field: ControllerRenderProps<any>) => (value: any) => {
+      field.onChange(Number(value?.value));
+      form.setValue(
+        "harga_beli",
+        products?.find((product) => product.id === Number(value?.value))
+          ?.harga_modal || 0
+      );
+    };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -179,18 +182,25 @@ export default function AddForm({}: Props) {
             <FormItem>
               <FormLabel>Barang</FormLabel>
               <FormControl>
-                <Select onValueChange={(value) => selectProduct(field, value)}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="-- Pilih Barang --" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((product) => (
-                      <SelectItem key={product.id} value={String(product.id!)}>
-                        {product.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Autocomplete
+                  isClearable
+                  options={
+                    products?.map((product) => ({
+                      value: String(product.id),
+                      label: product.name,
+                    })) || []
+                  }
+                  onChange={handleChangeProduct(
+                    field as ControllerRenderProps<any>
+                  )}
+                  value={{
+                    label: products?.find(
+                      (product) => product.id === Number(field.value)
+                    )?.name,
+                    value: field.value,
+                  }}
+                  onBlur={field?.onBlur}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

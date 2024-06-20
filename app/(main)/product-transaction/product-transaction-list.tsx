@@ -44,10 +44,6 @@ export default function ProductTransactionList({}: Props) {
 
   const columns: ColumnDef<ProductTransactionEntity>[] = [
     {
-      header: "Index",
-      cell: (info) => info.row.index + 1,
-    },
-    {
       header: ({ column }) => {
         return (
           <Button

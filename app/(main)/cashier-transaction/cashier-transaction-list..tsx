@@ -40,10 +40,6 @@ export default function CashierTransactionList({ products }: Props) {
 
   const columns: ColumnDef<CashierTransactionEntity>[] = [
     {
-      header: "Index",
-      cell: (info) => info.row.index + 1,
-    },
-    {
       header: ({ column }) => {
         return (
           <Button
