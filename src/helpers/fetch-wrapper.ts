@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import https from "https";
 import { getSession, signOut } from "next-auth/react";
+import { handleErrorPost } from "./error-handle";
 
 const xios: AxiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
@@ -55,15 +56,7 @@ const post = async (url: string, body?: any) => {
     const res = await xios.post(url, body);
     return res.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        await signOut({ redirect: true, callbackUrl: "/login" });
-        return null;
-      }
-    }
-    alert("Something went wrong");
-    console.error(error);
-    return null;
+    handleErrorPost(error);
   }
 };
 
