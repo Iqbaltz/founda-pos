@@ -1,35 +1,27 @@
 "use client";
 import { ColumnDef, SortingState } from "@tanstack/react-table";
-import { ArrowUpDown, DownloadIcon, EditIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, DownloadIcon, EditIcon } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/src/helpers/utils";
 import { PaginatedDataTable } from "@/components/ui/paginated-data-table";
 import PaginatedModel, { emptyPagination } from "@/src/helpers/pagination";
-import { useRouter, useSearchParams } from "next/navigation";
 import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entity";
 import { cashierService } from "@/src/service/cashier";
-import { ProductEntity } from "@/src/entity/product-entity";
-import { TransactionType } from "@/src/helpers/constants";
 import { numberToRupiah } from "@/src/helpers/numberToRupiah";
-import { saveAs } from "file-saver";
 import debounce from "lodash.debounce";
 
-type Props = {
-  products: ProductEntity[];
-};
-
-export default function CashierTransactionList({ products }: Props) {
-  const searchParams = useSearchParams();
+export default function CashierTransactionList() {
   const [cashierTransactions, setCashierTransactions] =
     useState<PaginatedModel<CashierTransactionEntity>>(emptyPagination);
   const { getAllCashierTransactions, printReceipt } = cashierService;
 
   const fetchCashierTransactions = debounce(
-    async (page: number, key: string, sorts: SortingState) => {
+    async (page: number, limit: number, key: string, sorts: SortingState) => {
       const data = await getAllCashierTransactions(
         String(page || 1),
+        limit,
         key,
         sorts
       );
@@ -234,8 +226,8 @@ export default function CashierTransactionList({ products }: Props) {
     <PaginatedDataTable
       columns={columns}
       data={cashierTransactions}
-      onChange={(page, searchKey, sorts) =>
-        fetchCashierTransactions(page, searchKey, sorts)
+      onChange={(page, limit, searchKey, sorts) =>
+        fetchCashierTransactions(page, limit, searchKey, sorts)
       }
     />
   );

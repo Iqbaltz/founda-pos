@@ -6,11 +6,13 @@ import PaginatedModel from "../helpers/pagination";
 
 const getAllProductTransactions = async (
   page: string,
+  limit: number,
   searchKey: string,
   sorts: SortingState
 ) => {
   const res = await fetchWrapper.get(`/barang-transaction`, {
     page,
+    results: limit,
     search: searchKey,
     orders: sorts,
   });

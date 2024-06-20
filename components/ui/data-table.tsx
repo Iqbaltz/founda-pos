@@ -25,7 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import StaticPagination from "./static-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,12 +55,14 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [searchKey, setSearchKey] = useState<string>("");
+  const [activePage, setActivePage] = useState(1);
+  const [activeLimit, setActiveLimit] = useState(10);
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -72,6 +75,15 @@ export function DataTable<TData, TValue>({
       globalFilter: searchKey,
     },
   });
+
+  const onPageChange = (page: number) => {
+    setActivePage(page);
+    table.setPageIndex(page - 1);
+  };
+
+  useEffect(() => {
+    table.setPageSize(activeLimit);
+  }, [activeLimit]);
 
   return (
     <div>
@@ -158,22 +170,13 @@ export function DataTable<TData, TValue>({
           </span>
         </div>
         <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          <StaticPagination
+            activePage={activePage}
+            lastPage={Math.ceil(data.length / activeLimit)}
+            limit={activeLimit}
+            setLimit={setActiveLimit}
+            onPageChange={(page) => onPageChange(page)}
+          />
         </div>
       </div>
     </div>

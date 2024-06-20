@@ -16,11 +16,13 @@ const editTransaction = async (id: string, payload: CashierEntity) => {
 
 const getAllCashierTransactions = async (
   page: string,
+  limit: number,
   searchKey: string,
   sorts: SortingState
 ) => {
   const res = await fetchWrapper.get(`/cashier-transaction`, {
     page,
+    results: limit,
     search: searchKey,
     orders: sorts,
   });
