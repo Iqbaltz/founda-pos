@@ -32,7 +32,7 @@ export default function Navbar({ children }: Props) {
     <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
       <nav className="w-full bg-secondary p-2 flex justify-between items-center">
         <Button variant={"ghost"} onClick={setCollapsed}>
-          <MenuIcon />
+          <MenuIcon className="text-primary" />
         </Button>
 
         <div className="flex items-center gap-2">
@@ -41,8 +41,8 @@ export default function Navbar({ children }: Props) {
             size="icon"
             onClick={() => setTheme(theme == "light" ? "dark" : "light")}
           >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="text-primary h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="text-primary absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           </Button>
           <div className="mr-2">
             {session ? (

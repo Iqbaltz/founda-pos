@@ -90,7 +90,7 @@ export default function Sidebar({}: Props) {
         }`}
       >
         <div className="flex items-center justify-between p-4">
-          <h1 className="font-bold">Pursida Cashier</h1>
+          <h1 className="font-bold">UD. Pursida</h1>
         </div>
 
         <div className="flex flex-col overflow-y-auto mt-4">

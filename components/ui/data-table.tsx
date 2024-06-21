@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { PlusIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -164,7 +164,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            <ChevronLeft className="text-primary" size={20} />
           </Button>
           <Button
             variant="outline"
@@ -172,7 +172,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            <ChevronRight className="text-primary" size={20} />
           </Button>
         </div>
       </div>
