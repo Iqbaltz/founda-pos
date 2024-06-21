@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, FileDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
@@ -37,6 +37,7 @@ interface DataTableProps<TData, TValue> {
     sorts: SortingState
   ) => void;
   addLink?: string;
+  exportService?: () => Promise<void>;
   name?: string;
 }
 
@@ -45,6 +46,7 @@ export function PaginatedDataTable<TData, TValue>({
   data,
   onChange,
   addLink,
+  exportService,
   name,
 }: DataTableProps<TData, TValue>) {
   const [searchKey, setSearchKey] = useState<string>("");
@@ -79,17 +81,29 @@ export function PaginatedDataTable<TData, TValue>({
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
         />
-        {addLink && (
-          <Link href={addLink}>
+        <div className="flex items-center gap-2">
+          {addLink && (
+            <Link href={addLink}>
+              <Button
+                variant={"secondary"}
+                className="flex items-center justify-center gap-1"
+              >
+                <PlusIcon />
+                Tambah
+              </Button>
+            </Link>
+          )}
+          {exportService && (
             <Button
-              variant={"secondary"}
+              onClick={exportService}
+              variant="destructive"
               className="flex items-center justify-center gap-1"
             >
-              <PlusIcon />
-              Tambah
+              <FileDownIcon />
+              Export CSV
             </Button>
-          </Link>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex justify-between mb-1 text-sm opacity-70">
         <span>

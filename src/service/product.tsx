@@ -32,6 +32,10 @@ const deleteProduct = async (id: number) => {
   return await fetchWrapper.remove(`/barang/${id}`);
 };
 
+const exportExcelProducts = async () => {
+  await fetchWrapper.download(`/barang/export-excel`);
+};
+
 export const productService = {
   getAllProducts,
   getAllProductsServer,
@@ -40,4 +44,5 @@ export const productService = {
   editProduct,
   deleteProduct,
   getProductServer,
+  exportExcelProducts,
 };

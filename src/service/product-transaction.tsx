@@ -42,6 +42,9 @@ const editProductTransaction = async (
 const deleteProductTransaction = async (id: number) => {
   return await fetchWrapper.remove(`/barang-transaction/${id}`);
 };
+const exportExcelProductTransactions = async () => {
+  await fetchWrapper.download(`/barang-transaction/export-excel`);
+};
 
 export const productTransactionService = {
   getAllProductTransactions,
@@ -50,4 +53,5 @@ export const productTransactionService = {
   editProductTransaction,
   deleteProductTransaction,
   getProductTransactionServer,
+  exportExcelProductTransactions,
 };

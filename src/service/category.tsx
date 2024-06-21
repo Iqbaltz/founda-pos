@@ -26,6 +26,9 @@ const editCategory = async (id: number, payload: CategoryEntity) => {
 const deleteCategory = async (id: number) => {
   return await fetchWrapper.remove(`/category/${id}`);
 };
+const exportExcelCategories = async () => {
+  await fetchWrapper.download(`/category/export-excel`);
+};
 
 export const categoryService = {
   getAllCategories,
@@ -34,4 +37,5 @@ export const categoryService = {
   editCategory,
   deleteCategory,
   getCategoryServer,
+  exportExcelCategories,
 };

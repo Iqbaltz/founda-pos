@@ -15,7 +15,11 @@ import debounce from "lodash.debounce";
 export default function CashierTransactionList() {
   const [cashierTransactions, setCashierTransactions] =
     useState<PaginatedModel<CashierTransactionEntity>>(emptyPagination);
-  const { getAllCashierTransactions, printReceipt } = cashierService;
+  const {
+    getAllCashierTransactions,
+    printReceipt,
+    exportExcelCashierTransactions,
+  } = cashierService;
 
   const fetchCashierTransactions = debounce(
     async (page: number, limit: number, key: string, sorts: SortingState) => {
@@ -211,10 +215,7 @@ export default function CashierTransactionList() {
             size={18}
             className="cursor-pointer text-green-500"
             onClick={async () => {
-              await printReceipt(
-                row?.original?.id,
-                row?.original?.transaction_number
-              );
+              await printReceipt(row?.original?.id);
             }}
           />
         </div>
@@ -226,6 +227,7 @@ export default function CashierTransactionList() {
     <PaginatedDataTable
       columns={columns}
       data={cashierTransactions}
+      exportService={exportExcelCashierTransactions}
       onChange={(page, limit, searchKey, sorts) =>
         fetchCashierTransactions(page, limit, searchKey, sorts)
       }

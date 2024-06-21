@@ -27,8 +27,11 @@ type Props = {};
 export default function ProductTransactionList({}: Props) {
   const [productTransactions, setProductTransactions] =
     useState<PaginatedModel<ProductTransactionEntity>>(emptyPagination);
-  const { getAllProductTransactions, deleteProductTransaction } =
-    productTransactionService;
+  const {
+    getAllProductTransactions,
+    deleteProductTransaction,
+    exportExcelProductTransactions,
+  } = productTransactionService;
 
   const fetchProductTransactions = debounce(
     async (page: number, limit: number, key: string, sorts: SortingState) => {
@@ -185,6 +188,7 @@ export default function ProductTransactionList({}: Props) {
       columns={columns}
       data={productTransactions}
       addLink="./product-transaction/add"
+      exportService={exportExcelProductTransactions}
       onChange={(page, limit, searchKey, sorts) =>
         fetchProductTransactions(page, limit, searchKey, sorts)
       }
