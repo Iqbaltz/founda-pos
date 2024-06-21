@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { Download, PlusIcon, FileDownIcon } from "lucide-react";
+import { PlusIcon, FileDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
@@ -74,7 +73,7 @@ export function PaginatedDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4">
+      <div className="flex items-center justify-between pb-4 gap-4">
         <Input
           placeholder="Cari..."
           className="max-w-sm"
@@ -82,10 +81,12 @@ export function PaginatedDataTable<TData, TValue>({
           onChange={(e) => setSearchKey(e.target.value)}
         />
         <div className="flex gap-4">
-          <Button className="gap-1">
-            <Download size={18} />
-            Export
-          </Button>
+          {exportService && (
+            <Button onClick={exportService} className="gap-2">
+              <FileDownIcon size={18} />
+              Export
+            </Button>
+          )}
           {addLink && (
             <Link href={addLink}>
               <Button
@@ -96,16 +97,6 @@ export function PaginatedDataTable<TData, TValue>({
                 Tambah
               </Button>
             </Link>
-          )}
-          {exportService && (
-            <Button
-              onClick={exportService}
-              variant="destructive"
-              className="flex items-center justify-center gap-1"
-            >
-              <FileDownIcon />
-              Export CSV
-            </Button>
           )}
         </div>
       </div>

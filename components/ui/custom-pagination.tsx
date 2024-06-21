@@ -36,8 +36,7 @@ export function CustomPagination({
         key={page}
         variant={page === data.current_page ? "default" : "outline"}
         size="sm"
-        onClick={() => onPageChange(page, limit)}
-        disabled={page === data.current_page}
+        onClick={() => page != data.current_page && onPageChange(page, limit)}
       >
         {page}
       </Button>

@@ -26,7 +26,6 @@ import { Button } from "./button";
 import {
   ChevronLeft,
   ChevronRight,
-  Download,
   PlusIcon,
   FileDownIcon,
 } from "lucide-react";
@@ -95,7 +94,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4">
+      <div className="flex items-center justify-between pb-4 gap-4">
         <Input
           placeholder="Cari..."
           className="max-w-sm"
@@ -103,10 +102,12 @@ export function DataTable<TData, TValue>({
           onChange={(e) => setSearchKey(e.target.value)}
         />
         <div className="flex gap-4">
-          <Button className="gap-1">
-            <Download size={18} />
-            Export
-          </Button>
+          {exportService && (
+            <Button onClick={exportService} className="gap-1">
+              <FileDownIcon size={18} />
+              Export
+            </Button>
+          )}
           {addLink && (
             <Link href={addLink}>
               <Button
@@ -117,16 +118,6 @@ export function DataTable<TData, TValue>({
                 Tambah
               </Button>
             </Link>
-          )}
-          {exportService && (
-            <Button
-              onClick={exportService}
-              variant="destructive"
-              className="flex items-center justify-center gap-1"
-            >
-              <FileDownIcon />
-              Export CSV
-            </Button>
           )}
         </div>
       </div>
@@ -194,22 +185,6 @@ export function DataTable<TData, TValue>({
           </span>
         </div>
         <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronLeft className="text-primary" size={20} />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronRight className="text-primary" size={20} />
-          </Button>
           <StaticPagination
             activePage={activePage}
             lastPage={Math.ceil(data.length / activeLimit)}
