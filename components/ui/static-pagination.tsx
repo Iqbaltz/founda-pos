@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./button";
 import {
   Select,
@@ -37,8 +38,7 @@ export function StaticPagination({
         key={page}
         variant={page === activePage ? "default" : "outline"}
         size="sm"
-        onClick={() => onPageChange(page)}
-        disabled={page === activePage}
+        onClick={() => page != activePage && onPageChange(page)}
       >
         {page}
       </Button>
@@ -75,7 +75,7 @@ export function StaticPagination({
       onClick={() => onPageChange(activePage - 1)}
       disabled={activePage < 2}
     >
-      Previous
+      <ChevronLeft className="text-primary" size={20} />
     </Button>
   );
 
@@ -87,7 +87,7 @@ export function StaticPagination({
       onClick={() => onPageChange(activePage + 1)}
       disabled={activePage >= lastPage}
     >
-      Next
+      <ChevronRight className="text-primary" size={20} />
     </Button>
   );
   pages.push(

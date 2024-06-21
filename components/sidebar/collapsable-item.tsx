@@ -17,11 +17,15 @@ type Props = {
 
 export default function CollapsableItem({ name, sub, icon }: Props) {
   const pathname = usePathname();
+
+  const isPathMaster = sub.some((item) => pathname === item.link);
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value={name} className="border-none">
         <AccordionTrigger
-          className={`flex items-center text-left w-full px-4 py-3 cursor-pointer text-foreground hover:bg-accent/50 hover:no-underline`}
+          className={`flex items-center text-left w-full px-4 py-3 cursor-pointer text-foreground hover:bg-accent/50 hover:no-underline ${
+            isPathMaster ? "bg-accent text-primary" : ""
+          }`}
         >
           <span className="flex justify-center gap-2">
             {icon && icon}
@@ -36,7 +40,7 @@ export default function CollapsableItem({ name, sub, icon }: Props) {
                 href={item.link}
                 key={`${name}-${index}`}
                 className={`w-full px-8 pl-12 py-2 text-foreground hover:bg-accent/50 ${
-                  isActive ? "bg-accent" : ""
+                  isActive ? "bg-accent text-primary" : ""
                 }`}
               >
                 {item.name}

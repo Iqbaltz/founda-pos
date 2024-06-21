@@ -1,3 +1,4 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./button";
 import PaginatedModel from "@/src/helpers/pagination";
 import {
@@ -35,8 +36,7 @@ export function CustomPagination({
         key={page}
         variant={page === data.current_page ? "default" : "outline"}
         size="sm"
-        onClick={() => onPageChange(page, limit)}
-        disabled={page === data.current_page}
+        onClick={() => page != data.current_page && onPageChange(page, limit)}
       >
         {page}
       </Button>
@@ -73,7 +73,7 @@ export function CustomPagination({
       onClick={() => onPageChange(data.current_page - 1, limit)}
       disabled={data.current_page < 2}
     >
-      Previous
+      <ChevronLeft className="text-primary" size={20} />
     </Button>
   );
 
@@ -85,7 +85,7 @@ export function CustomPagination({
       onClick={() => onPageChange(data.current_page + 1, limit)}
       disabled={data.current_page >= data.last_page}
     >
-      Next
+      <ChevronRight className="text-primary" size={20} />
     </Button>
   );
   pages.push(

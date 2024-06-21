@@ -6,6 +6,7 @@ import {
   BadgeDollarSignIcon,
   BoxIcon,
   BrickWallIcon,
+  FolderSync,
   HistoryIcon,
   Settings,
   TruckIcon,
@@ -68,6 +69,11 @@ const sidebarItems = [
     link: "/setting",
     icon: <Settings />,
   },
+  {
+    name: "Sinkronisasi",
+    link: "/sync-transaction",
+    icon: <FolderSync />,
+  },
 ];
 
 export default function Sidebar({}: Props) {
@@ -90,7 +96,7 @@ export default function Sidebar({}: Props) {
         }`}
       >
         <div className="flex items-center justify-between p-4">
-          <h1 className="font-bold">Pursida Cashier</h1>
+          <h1 className="font-bold">UD. Pursida</h1>
         </div>
 
         <div className="flex flex-col overflow-y-auto mt-4">

@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
@@ -74,34 +73,30 @@ export function PaginatedDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4">
+      <div className="flex items-center justify-between pb-4 gap-4">
         <Input
           placeholder="Cari..."
           className="max-w-sm"
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
         />
-        <div className="flex items-center gap-2">
+        <div className="flex gap-4">
+          {exportService && (
+            <Button onClick={exportService} className="gap-2">
+              <FileDownIcon size={18} />
+              Export
+            </Button>
+          )}
           {addLink && (
             <Link href={addLink}>
               <Button
                 variant={"secondary"}
                 className="flex items-center justify-center gap-1"
               >
-                <PlusIcon />
+                <PlusIcon size={18} />
                 Tambah
               </Button>
             </Link>
-          )}
-          {exportService && (
-            <Button
-              onClick={exportService}
-              variant="destructive"
-              className="flex items-center justify-center gap-1"
-            >
-              <FileDownIcon />
-              Export CSV
-            </Button>
           )}
         </div>
       </div>

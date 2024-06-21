@@ -13,7 +13,7 @@ export default function SidebarItem({ isActive, url, icon, name }: Props) {
     <Link
       href={url}
       className={`px-4 py-3 text-foreground hover:bg-accent/50 cursor-pointer flex items-center gap-2 ${
-        isActive ? "bg-accent" : ""
+        isActive ? "bg-accent text-primary" : ""
       }`}
     >
       {icon && icon}
