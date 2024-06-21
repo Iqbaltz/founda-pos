@@ -6,6 +6,7 @@ import {
   BadgeDollarSignIcon,
   BoxIcon,
   BrickWallIcon,
+  FolderSync,
   HistoryIcon,
   Settings,
   TruckIcon,
@@ -67,6 +68,11 @@ const sidebarItems = [
     name: "Pengaturan",
     link: "/setting",
     icon: <Settings />,
+  },
+  {
+    name: "Sinkronisasi",
+    link: "/sync-transaction",
+    icon: <FolderSync />,
   },
 ];
 

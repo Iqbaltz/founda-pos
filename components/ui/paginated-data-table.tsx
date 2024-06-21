@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { PlusIcon } from "lucide-react";
+import { Download, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
@@ -70,17 +70,23 @@ export function PaginatedDataTable<TData, TValue>({
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
         />
-        {addLink && (
-          <Link href={addLink}>
-            <Button
-              variant={"secondary"}
-              className="flex items-center justify-center gap-1"
-            >
-              <PlusIcon />
-              Tambah
-            </Button>
-          </Link>
-        )}
+        <div className="flex gap-4">
+          <Button className="gap-1">
+            <Download size={18} />
+            Export
+          </Button>
+          {addLink && (
+            <Link href={addLink}>
+              <Button
+                variant={"secondary"}
+                className="flex items-center justify-center gap-1"
+              >
+                <PlusIcon size={18} />
+                Tambah
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
       <div className="flex justify-between mb-1 text-sm opacity-70">
         <span>
