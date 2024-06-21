@@ -27,13 +27,17 @@ type Props = {};
 export default function ProductTransactionList({}: Props) {
   const [productTransactions, setProductTransactions] =
     useState<PaginatedModel<ProductTransactionEntity>>(emptyPagination);
-  const { getAllProductTransactions, deleteProductTransaction } =
-    productTransactionService;
+  const {
+    getAllProductTransactions,
+    deleteProductTransaction,
+    exportExcelProductTransactions,
+  } = productTransactionService;
 
   const fetchProductTransactions = debounce(
-    async (page: number, key: string, sorts: SortingState) => {
+    async (page: number, limit: number, key: string, sorts: SortingState) => {
       const data = await getAllProductTransactions(
         String(page || 1),
+        limit,
         key,
         sorts
       );
@@ -165,7 +169,7 @@ export default function ProductTransactionList({}: Props) {
                     );
                     if (res) {
                       alert("Transaksi berhasil dihapus");
-                      fetchProductTransactions(1, "", []);
+                      fetchProductTransactions(1, 10, "", []);
                     }
                   }}
                 >
@@ -184,8 +188,9 @@ export default function ProductTransactionList({}: Props) {
       columns={columns}
       data={productTransactions}
       addLink="./product-transaction/add"
-      onChange={(page, searchKey, sorts) =>
-        fetchProductTransactions(page, searchKey, sorts)
+      exportService={exportExcelProductTransactions}
+      onChange={(page, limit, searchKey, sorts) =>
+        fetchProductTransactions(page, limit, searchKey, sorts)
       }
     />
   );

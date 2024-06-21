@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import https from "https";
 import { getSession, signOut } from "next-auth/react";
 import { handleErrorPost } from "./error-handle";
@@ -90,10 +90,26 @@ const remove = async (url: string) => {
   }
 };
 
-const download = async (url: string, filename: string) => {
+const download = async (url: string) => {
   try {
-    const res = await xios.get(url, { responseType: "blob" });
+    const res: AxiosResponse<Blob> = await xios.get(url, {
+      responseType: "blob",
+    });
     const blob = new Blob([res.data], { type: res.data.type });
+
+    const contentDisposition = res.headers["content-disposition"];
+    console.log(res.headers);
+    let filename = "download";
+
+    if (contentDisposition && contentDisposition.includes("attachment")) {
+      const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
+        contentDisposition
+      );
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+
     const urlRes = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = urlRes;

@@ -16,11 +16,13 @@ const editTransaction = async (id: string, payload: CashierEntity) => {
 
 const getAllCashierTransactions = async (
   page: string,
+  limit: number,
   searchKey: string,
   sorts: SortingState
 ) => {
   const res = await fetchWrapper.get(`/cashier-transaction`, {
     page,
+    results: limit,
     search: searchKey,
     orders: sorts,
   });
@@ -33,11 +35,11 @@ const getCashierTransactionServer = async (id: string) => {
   return res.data as CashierTransactionEntity;
 };
 
-const printReceipt = async (id: number, filename?: string) => {
-  await fetchWrapper.download(
-    `/cashier-transaction/print-receipt/${id}`,
-    `${filename ? filename : "Receipt"}.pdf`
-  );
+const printReceipt = async (id: number) => {
+  await fetchWrapper.download(`/cashier-transaction/print-receipt/${id}`);
+};
+const exportExcelCashierTransactions = async () => {
+  await fetchWrapper.download(`/cashier-transaction/export-excel`);
 };
 
 export const cashierService = {
@@ -46,4 +48,5 @@ export const cashierService = {
   getAllCashierTransactions,
   getCashierTransactionServer,
   printReceipt,
+  exportExcelCashierTransactions,
 };

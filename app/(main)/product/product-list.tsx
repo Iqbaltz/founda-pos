@@ -24,7 +24,7 @@ type Props = {};
 
 export default function ProductList({}: Props) {
   const [products, setProducts] = useState<ProductEntity[]>([]);
-  const { getAllProducts, deleteProduct } = productService;
+  const { getAllProducts, deleteProduct, exportExcelProducts } = productService;
 
   const fetchProducts = async () => {
     const data = await getAllProducts();
@@ -202,6 +202,11 @@ export default function ProductList({}: Props) {
   ];
 
   return (
-    <DataTable columns={columns} data={products} addLink="./product/add" />
+    <DataTable
+      columns={columns}
+      data={products}
+      addLink="./product/add"
+      exportService={exportExcelProducts}
+    />
   );
 }

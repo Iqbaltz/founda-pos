@@ -23,7 +23,8 @@ type Props = {};
 
 export default function CustomerList({}: Props) {
   const [customers, setCustomers] = useState<CustomerEntity[]>([]);
-  const { getAllCustomer, deleteCustomer } = customerService;
+  const { getAllCustomer, deleteCustomer, exportExcelCustomers } =
+    customerService;
 
   const fetchCustomer = async () => {
     const data = await getAllCustomer();
@@ -122,6 +123,11 @@ export default function CustomerList({}: Props) {
   ];
 
   return (
-    <DataTable columns={columns} data={customers} addLink="./customer/add" />
+    <DataTable
+      columns={columns}
+      data={customers}
+      addLink="./customer/add"
+      exportService={exportExcelCustomers}
+    />
   );
 }

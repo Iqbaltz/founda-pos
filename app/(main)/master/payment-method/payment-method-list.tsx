@@ -25,7 +25,8 @@ export default function PaymentMethodList({}: Props) {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethodEntity[]>(
     []
   );
-  const { getAllPaymentMethods } = paymentMethodService;
+  const { getAllPaymentMethods, exportExcelPaymentMethods } =
+    paymentMethodService;
 
   const fetchPaymentMethods = async () => {
     const data = await getAllPaymentMethods();
@@ -116,6 +117,7 @@ export default function PaymentMethodList({}: Props) {
       columns={columns}
       data={paymentMethods}
       addLink="./payment-method/add"
+      exportService={exportExcelPaymentMethods}
     />
   );
 }

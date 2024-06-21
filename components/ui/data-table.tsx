@@ -23,14 +23,22 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { ChevronLeft, ChevronRight, Download, PlusIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  PlusIcon,
+  FileDownIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import StaticPagination from "./static-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   addLink?: string;
+  exportService?: () => Promise<void>;
   name?: string;
 }
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -50,16 +58,19 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   addLink,
+  exportService,
   name,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [searchKey, setSearchKey] = useState<string>("");
+  const [activePage, setActivePage] = useState(1);
+  const [activeLimit, setActiveLimit] = useState(10);
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -72,6 +83,15 @@ export function DataTable<TData, TValue>({
       globalFilter: searchKey,
     },
   });
+
+  const onPageChange = (page: number) => {
+    setActivePage(page);
+    table.setPageIndex(page - 1);
+  };
+
+  useEffect(() => {
+    table.setPageSize(activeLimit);
+  }, [activeLimit]);
 
   return (
     <div>
@@ -97,6 +117,16 @@ export function DataTable<TData, TValue>({
                 Tambah
               </Button>
             </Link>
+          )}
+          {exportService && (
+            <Button
+              onClick={exportService}
+              variant="destructive"
+              className="flex items-center justify-center gap-1"
+            >
+              <FileDownIcon />
+              Export CSV
+            </Button>
           )}
         </div>
       </div>
@@ -180,6 +210,13 @@ export function DataTable<TData, TValue>({
           >
             <ChevronRight className="text-primary" size={20} />
           </Button>
+          <StaticPagination
+            activePage={activePage}
+            lastPage={Math.ceil(data.length / activeLimit)}
+            limit={activeLimit}
+            setLimit={setActiveLimit}
+            onPageChange={(page) => onPageChange(page)}
+          />
         </div>
       </div>
     </div>

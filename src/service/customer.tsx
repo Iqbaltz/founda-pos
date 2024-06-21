@@ -31,6 +31,9 @@ const editCustomer = async (id: number, payload: CustomerEntity) => {
 const deleteCustomer = async (id: number) => {
   return await fetchWrapper.remove(`/customer/${id}`);
 };
+const exportExcelCustomers = async () => {
+  await fetchWrapper.download(`/customer/export-excel`);
+};
 
 export const customerService = {
   getAllCustomer,
@@ -40,4 +43,5 @@ export const customerService = {
   editCustomer,
   deleteCustomer,
   getCustomerServer,
+  exportExcelCustomers,
 };

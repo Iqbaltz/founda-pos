@@ -23,7 +23,8 @@ type Props = {};
 
 export default function SupplierList({}: Props) {
   const [suppliers, setSuppliers] = useState<SupplierEntity[]>([]);
-  const { getAllSupplier, deleteSupplier } = supplierService;
+  const { getAllSupplier, deleteSupplier, exportExcelSuppliers } =
+    supplierService;
 
   const fetchSupplier = async () => {
     const data = await getAllSupplier();
@@ -122,6 +123,11 @@ export default function SupplierList({}: Props) {
   ];
 
   return (
-    <DataTable columns={columns} data={suppliers} addLink="./supplier/add" />
+    <DataTable
+      columns={columns}
+      data={suppliers}
+      addLink="./supplier/add"
+      exportService={exportExcelSuppliers}
+    />
   );
 }

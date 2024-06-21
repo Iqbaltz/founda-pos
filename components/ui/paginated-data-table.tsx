@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { Download, PlusIcon } from "lucide-react";
+import { Download, PlusIcon, FileDownIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PaginatedModel from "@/src/helpers/pagination";
@@ -30,8 +30,14 @@ import { formatCurrency } from "@/src/helpers/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: PaginatedModel<TData>;
-  onChange: (pageNumber: number, key: string, sorts: SortingState) => void;
+  onChange: (
+    pageNumber: number,
+    limit: number,
+    key: string,
+    sorts: SortingState
+  ) => void;
   addLink?: string;
+  exportService?: () => Promise<void>;
   name?: string;
 }
 
@@ -40,10 +46,12 @@ export function PaginatedDataTable<TData, TValue>({
   data,
   onChange,
   addLink,
+  exportService,
   name,
 }: DataTableProps<TData, TValue>) {
   const [searchKey, setSearchKey] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [activeLimit, setActiveLimit] = useState(10);
 
   const table = useReactTable({
     data: data.data,
@@ -58,8 +66,11 @@ export function PaginatedDataTable<TData, TValue>({
   });
 
   useEffect(() => {
-    onChange(1, searchKey, sorting);
-  }, [searchKey, sorting]);
+    onChange(1, activeLimit, searchKey, sorting);
+  }, [searchKey, sorting, activeLimit]);
+  useEffect(() => {
+    table.setPageSize(activeLimit);
+  }, [activeLimit]);
 
   return (
     <div>
@@ -85,6 +96,16 @@ export function PaginatedDataTable<TData, TValue>({
                 Tambah
               </Button>
             </Link>
+          )}
+          {exportService && (
+            <Button
+              onClick={exportService}
+              variant="destructive"
+              className="flex items-center justify-center gap-1"
+            >
+              <FileDownIcon />
+              Export CSV
+            </Button>
           )}
         </div>
       </div>
@@ -161,14 +182,18 @@ export function PaginatedDataTable<TData, TValue>({
       <div className="flex justify-between py-4 text-sm">
         <div>
           <span>
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+            Page {data.current_page} of {Math.ceil(data.total / activeLimit)}
           </span>
         </div>
         <div className="flex space-x-2">
           <CustomPagination
             data={data}
-            onPageChange={(page) => onChange(page, searchKey, sorting)}
+            limit={activeLimit}
+            setLimit={setActiveLimit}
+            onPageChange={(page, limit) => {
+              setActiveLimit(limit);
+              onChange(page, limit, searchKey, sorting);
+            }}
           />
         </div>
       </div>
