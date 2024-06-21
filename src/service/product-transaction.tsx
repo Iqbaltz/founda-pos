@@ -6,11 +6,13 @@ import PaginatedModel from "../helpers/pagination";
 
 const getAllProductTransactions = async (
   page: string,
+  limit: number,
   searchKey: string,
   sorts: SortingState
 ) => {
   const res = await fetchWrapper.get(`/barang-transaction`, {
     page,
+    results: limit,
     search: searchKey,
     orders: sorts,
   });
@@ -40,6 +42,9 @@ const editProductTransaction = async (
 const deleteProductTransaction = async (id: number) => {
   return await fetchWrapper.remove(`/barang-transaction/${id}`);
 };
+const exportExcelProductTransactions = async () => {
+  await fetchWrapper.download(`/barang-transaction/export-excel`);
+};
 
 export const productTransactionService = {
   getAllProductTransactions,
@@ -48,4 +53,5 @@ export const productTransactionService = {
   editProductTransaction,
   deleteProductTransaction,
   getProductTransactionServer,
+  exportExcelProductTransactions,
 };

@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/accordion";
 
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 type Props = {

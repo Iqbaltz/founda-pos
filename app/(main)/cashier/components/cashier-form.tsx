@@ -64,7 +64,7 @@ export default function CashierForm({
     });
 
     if (res) {
-      await printReceipt(res?.id, res?.transaction_number);
+      await printReceipt(res?.id);
       form.reset();
       alert("Transaksi berhasil!");
       router.push("/cashier-transaction");

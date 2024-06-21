@@ -1,5 +1,4 @@
 import { Button } from "./button";
-import PaginatedModel from "@/src/helpers/pagination";
 import {
   Select,
   SelectContent,
@@ -9,16 +8,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function CustomPagination({
-  data,
+export function StaticPagination({
+  activePage,
+  lastPage,
   limit,
   setLimit,
   onPageChange,
 }: {
-  data: PaginatedModel<any>;
+  activePage: number;
+  lastPage: number;
   limit: number;
   setLimit: (limit: number) => void;
-  onPageChange: (pageNumber: number, limit: number) => void;
+  onPageChange: (pageNumber: number) => void;
 }) {
   const pages = [];
   const showEllipsis = (side: "left" | "right") => {
@@ -29,14 +30,15 @@ export function CustomPagination({
     );
   };
 
-  const showPageButton = (page: number) => {
+  const showPageButton = (pageNumber: number) => {
+    const page = Math.ceil(pageNumber);
     return (
       <Button
         key={page}
-        variant={page === data.current_page ? "default" : "outline"}
+        variant={page === activePage ? "default" : "outline"}
         size="sm"
-        onClick={() => onPageChange(page, limit)}
-        disabled={page === data.current_page}
+        onClick={() => onPageChange(page)}
+        disabled={page === activePage}
       >
         {page}
       </Button>
@@ -44,25 +46,25 @@ export function CustomPagination({
   };
   pages.push(showPageButton(1));
 
-  if (data.current_page > 3) {
+  if (activePage > 3) {
     pages.push(showEllipsis("left"));
   }
 
   // Calculate start and end page numbers to show around the current page
-  const startPage = Math.max(data.current_page - 1, 2);
-  const endPage = Math.min(data.current_page + 1, data.last_page - 1);
+  const startPage = Math.max(activePage - 1, 2);
+  const endPage = Math.min(activePage + 1, lastPage - 1);
 
   for (let i = startPage; i <= endPage; i++) {
     pages.push(showPageButton(i));
   }
 
-  if (data.current_page < data.last_page - 2) {
+  if (activePage < lastPage - 2) {
     pages.push(showEllipsis("right"));
   }
 
   // Always show the last page
-  if (data.last_page > 1) {
-    pages.push(showPageButton(data.last_page));
+  if (lastPage > 1) {
+    pages.push(showPageButton(lastPage));
   }
 
   pages.unshift(
@@ -70,8 +72,8 @@ export function CustomPagination({
       key="prev"
       variant="outline"
       size="sm"
-      onClick={() => onPageChange(data.current_page - 1, limit)}
-      disabled={data.current_page < 2}
+      onClick={() => onPageChange(activePage - 1)}
+      disabled={activePage < 2}
     >
       Previous
     </Button>
@@ -82,19 +84,14 @@ export function CustomPagination({
       key="next"
       variant="outline"
       size="sm"
-      onClick={() => onPageChange(data.current_page + 1, limit)}
-      disabled={data.current_page >= data.last_page}
+      onClick={() => onPageChange(activePage + 1)}
+      disabled={activePage >= lastPage}
     >
       Next
     </Button>
   );
   pages.push(
-    <Select
-      onValueChange={(e) => {
-        setLimit(Number(e));
-        onPageChange(1, Number(e));
-      }}
-    >
+    <Select onValueChange={(e) => setLimit(Number(e))}>
       <SelectTrigger className="w-[90px]">
         <SelectValue placeholder={limit} />
       </SelectTrigger>
@@ -111,4 +108,4 @@ export function CustomPagination({
   return pages;
 }
 
-export default CustomPagination;
+export default StaticPagination;

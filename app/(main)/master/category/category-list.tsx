@@ -23,7 +23,7 @@ type Props = {};
 
 export default function CategoryList({}: Props) {
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
-  const { getAllCategories } = categoryService;
+  const { getAllCategories, exportExcelCategories } = categoryService;
 
   const fetchCategories = async () => {
     const data = await getAllCategories();
@@ -110,6 +110,11 @@ export default function CategoryList({}: Props) {
   ];
 
   return (
-    <DataTable columns={columns} data={categories} addLink="./category/add" />
+    <DataTable
+      columns={columns}
+      data={categories}
+      addLink="./category/add"
+      exportService={exportExcelCategories}
+    />
   );
 }

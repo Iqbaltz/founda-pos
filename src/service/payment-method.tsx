@@ -32,6 +32,9 @@ const editPaymentMethod = async (id: number, payload: PaymentMethodEntity) => {
 const deletePaymentMethod = async (id: number) => {
   return await fetchWrapper.remove(`/payment-method/${id}`);
 };
+const exportExcelPaymentMethods = async () => {
+  await fetchWrapper.download(`/payment-method/export-excel`);
+};
 
 export const paymentMethodService = {
   getAllPaymentMethods,
@@ -41,4 +44,5 @@ export const paymentMethodService = {
   editPaymentMethod,
   deletePaymentMethod,
   getPaymentMethodServer,
+  exportExcelPaymentMethods,
 };

@@ -31,6 +31,9 @@ const editSupplier = async (id: number, payload: SupplierEntity) => {
 const deleteSupplier = async (id: number) => {
   return await fetchWrapper.remove(`/supplier/${id}`);
 };
+const exportExcelSuppliers = async () => {
+  await fetchWrapper.download(`/supplier/export-excel`);
+};
 
 export const supplierService = {
   getAllSupplier,
@@ -40,4 +43,5 @@ export const supplierService = {
   editSupplier,
   deleteSupplier,
   getSupplierServer,
+  exportExcelSuppliers,
 };

@@ -89,10 +89,7 @@ export default function EditCashierForm({
   }
 
   const handlePrintReceipt = async () => {
-    await printReceipt(
-      Number(transactionId),
-      transactionDetail?.transaction_number
-    );
+    await printReceipt(Number(transactionId));
   };
 
   useEffect(

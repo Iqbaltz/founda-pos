@@ -23,14 +23,16 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "./button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, FileDownIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import StaticPagination from "./static-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   addLink?: string;
+  exportService?: () => Promise<void>;
   name?: string;
 }
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -50,16 +52,19 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   addLink,
+  exportService,
   name,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [searchKey, setSearchKey] = useState<string>("");
+  const [activePage, setActivePage] = useState(1);
+  const [activeLimit, setActiveLimit] = useState(10);
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -73,6 +78,15 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const onPageChange = (page: number) => {
+    setActivePage(page);
+    table.setPageIndex(page - 1);
+  };
+
+  useEffect(() => {
+    table.setPageSize(activeLimit);
+  }, [activeLimit]);
+
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
@@ -82,17 +96,29 @@ export function DataTable<TData, TValue>({
           value={searchKey}
           onChange={(e) => setSearchKey(e.target.value)}
         />
-        {addLink && (
-          <Link href={addLink}>
+        <div className="flex items-center gap-2">
+          {addLink && (
+            <Link href={addLink}>
+              <Button
+                variant={"secondary"}
+                className="flex items-center justify-center gap-1"
+              >
+                <PlusIcon />
+                Tambah
+              </Button>
+            </Link>
+          )}
+          {exportService && (
             <Button
-              variant={"secondary"}
+              onClick={exportService}
+              variant="destructive"
               className="flex items-center justify-center gap-1"
             >
-              <PlusIcon />
-              Tambah
+              <FileDownIcon />
+              Export CSV
             </Button>
-          </Link>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex justify-between mb-1 text-sm opacity-70">
         <span>
@@ -158,22 +184,13 @@ export function DataTable<TData, TValue>({
           </span>
         </div>
         <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          <StaticPagination
+            activePage={activePage}
+            lastPage={Math.ceil(data.length / activeLimit)}
+            limit={activeLimit}
+            setLimit={setActiveLimit}
+            onPageChange={(page) => onPageChange(page)}
+          />
         </div>
       </div>
     </div>
