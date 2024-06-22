@@ -38,8 +38,12 @@ const getCashierTransactionServer = async (id: string) => {
 const printReceipt = async (id: number) => {
   await fetchWrapper.download(`/cashier-transaction/print-receipt/${id}`);
 };
+const getCashierTransactionHtml = async (id: string) => {
+  const res = await fetchWrapper.get(`/cashier-transaction/get-html/${id}`);
+  return res;
+};
 const exportExcelCashierTransactions = async () => {
-  await fetchWrapper.download(`/cashier-transaction/export-excel`);
+  await fetchWrapper.printPdf(`/cashier-transaction/export-excel`);
 };
 
 export const cashierService = {
@@ -49,4 +53,5 @@ export const cashierService = {
   getCashierTransactionServer,
   printReceipt,
   exportExcelCashierTransactions,
+  getCashierTransactionHtml,
 };
