@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef, SortingState } from "@tanstack/react-table";
-import { ArrowUpDown, DownloadIcon, EditIcon } from "lucide-react";
+import { ArrowUpDown, DownloadIcon, EditIcon, PrinterIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ export default function CashierTransactionList() {
     getAllCashierTransactions,
     printReceipt,
     exportExcelCashierTransactions,
+    getCashierTransactionHtml,
   } = cashierService;
 
   const fetchCashierTransactions = debounce(
@@ -33,6 +34,18 @@ export default function CashierTransactionList() {
     },
     500
   );
+
+  const printLiveReceipt = async (id: number) => {
+    const html = await getCashierTransactionHtml(String(id));
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+    printWindow?.document.write(html);
+
+    // Add a print command
+    printWindow?.document.close();
+    printWindow?.focus();
+    printWindow?.print();
+    printWindow?.close();
+  };
 
   const columns: ColumnDef<CashierTransactionEntity>[] = [
     {
@@ -216,6 +229,13 @@ export default function CashierTransactionList() {
             className="cursor-pointer text-green-500"
             onClick={async () => {
               await printReceipt(row?.original?.id);
+            }}
+          />
+          <PrinterIcon
+            size={18}
+            className="cursor-pointer text-blue-500"
+            onClick={async () => {
+              await printLiveReceipt(row?.original?.id);
             }}
           />
         </div>

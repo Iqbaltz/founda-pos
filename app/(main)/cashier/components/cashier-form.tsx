@@ -55,8 +55,20 @@ export default function CashierForm({
     name: "items",
   });
 
-  const { addTransaction, printReceipt } = cashierService;
+  const { addTransaction, printReceipt, getCashierTransactionHtml } =
+    cashierService;
 
+  const printLiveReceipt = async (id: number) => {
+    const html = await getCashierTransactionHtml(String(id));
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+    printWindow?.document.write(html);
+
+    // Add a print command
+    printWindow?.document.close();
+    printWindow?.focus();
+    printWindow?.print();
+    printWindow?.close();
+  };
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
     const res = await addTransaction({
       ...data,
@@ -64,10 +76,14 @@ export default function CashierForm({
     });
 
     if (res) {
-      await printReceipt(res?.id);
+      await printLiveReceipt(res?.id);
       form.reset();
       alert("Transaksi berhasil!");
       router.push("/cashier-transaction");
+      // await printReceipt(res?.id);
+      // form.reset();
+      // alert("Transaksi berhasil!");
+      // router.push("/cashier-transaction");
     }
   }
 
