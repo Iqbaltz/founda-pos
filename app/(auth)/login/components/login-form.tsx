@@ -35,6 +35,7 @@ export default function LoginForm({}: Props) {
     }).then(({ ok }: any) => {
       if (ok) {
         router.push("/cashier");
+        router.refresh();
       } else {
         alert("Login failed");
       }
