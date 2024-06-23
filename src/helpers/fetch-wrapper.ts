@@ -127,6 +127,32 @@ const download = async (url: string) => {
   }
 };
 
+const printPdf = async (url: string) => {
+  try {
+    const res: AxiosResponse<Blob> = await axios.get(url, {
+      responseType: "blob",
+    });
+    const blob = new Blob([res.data], { type: "application/pdf" });
+
+    const urlRes = window.URL.createObjectURL(blob);
+
+    // Open the PDF in a new tab and trigger the print dialog
+    const newTab = window.open(urlRes);
+    if (newTab) {
+      newTab.onload = () => {
+        newTab.print();
+      };
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        await signOut({ redirect: true, callbackUrl: "/login" });
+      }
+    }
+    console.error(error);
+  }
+};
+
 export const fetchWrapper = {
   get,
   post,
@@ -134,4 +160,5 @@ export const fetchWrapper = {
   remove,
   auth,
   download,
+  printPdf,
 };
