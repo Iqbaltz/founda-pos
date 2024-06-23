@@ -74,12 +74,12 @@ export default function AddItemForm({ append, products }: Props) {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex gap-1 mb-2">
+          <div className="flex md:gap-1 mb-2 gap-2 flex-col md:flex-row">
             <FormField
               control={form.control}
               name="barang_id"
               render={({ field }) => (
-                <FormItem className="w-[150%]">
+                <FormItem className="w-full md:w-[150%]">
                   <FormControl>
                     <Autocomplete
                       isClearable
