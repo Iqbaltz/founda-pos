@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React, { useEffect } from "react";
+import React from "react";
 import LoginForm from "./components/login-form";
 
 type Props = {};
