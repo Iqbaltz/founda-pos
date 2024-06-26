@@ -14,6 +14,9 @@ export const handleErrorPost = async (error: any) => {
         "Duplikat data ditemukan, silahkan cek kembali data yang diinputkan"
       );
     }
+    if (error?.code == "ERR_NETWORK") {
+      return error;
+    }
   }
   console.error(error);
   return null;
