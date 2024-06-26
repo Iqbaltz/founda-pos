@@ -9,8 +9,10 @@ import React from "react";
 type Props = {};
 
 export default function SyncTransactionList({}: Props) {
-  // get cashier transaction from local storage
-  const cashierTransaction = localStorage.getItem("cashierTransaction");
+  const cashierTransaction =
+    typeof window !== "undefined"
+      ? window.localStorage.getItem("cashierTransaction")
+      : null;
   const cashierTransactionParsed = JSON.parse(
     cashierTransaction || "[]"
   ) as CashierEntity[];
