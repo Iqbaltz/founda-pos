@@ -7,7 +7,23 @@ import PaginatedModel from "../helpers/pagination";
 
 const addTransaction = async (payload: CashierEntity) => {
   const res = await fetchWrapper.post("/cashier-transaction", payload);
-  return res?.data as CashierTransactionEntity;
+  if (res?.code == "ERR_NETWORK") {
+    alert("Jaringan bermasalah, data disimpan di local storage");
+    let cashierTransaction = JSON.parse(
+      localStorage.getItem("cashierTransaction") || "[]"
+    );
+    cashierTransaction.push(payload);
+    localStorage.setItem(
+      "cashierTransaction",
+      JSON.stringify(cashierTransaction)
+    );
+    return {
+      status: "offline",
+      message: "Data disimpan di local storage",
+      payload,
+    };
+  }
+  return res?.data;
 };
 
 const editTransaction = async (id: string, payload: CashierEntity) => {

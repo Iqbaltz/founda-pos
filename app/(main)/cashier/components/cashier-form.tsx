@@ -55,8 +55,7 @@ export default function CashierForm({
     name: "items",
   });
 
-  const { addTransaction, printReceipt, getCashierTransactionHtml } =
-    cashierService;
+  const { addTransaction, getCashierTransactionHtml } = cashierService;
 
   const printLiveReceipt = async (id: number) => {
     const html = await getCashierTransactionHtml(String(id));
@@ -75,15 +74,19 @@ export default function CashierForm({
       customer_id: data.customer_id === "0" ? null : data.customer_id,
     });
 
-    if (res) {
+    if (res.status === "offline") {
+      form.reset(
+        {
+          ...data,
+          items: [],
+        },
+        { keepValues: false }
+      );
+    } else if (res?.id) {
       await printLiveReceipt(res?.id);
       form.reset();
       alert("Transaksi berhasil!");
       router.push("/cashier-transaction");
-      // await printReceipt(res?.id);
-      // form.reset();
-      // alert("Transaksi berhasil!");
-      // router.push("/cashier-transaction");
     }
   }
 

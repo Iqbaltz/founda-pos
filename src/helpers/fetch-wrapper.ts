@@ -56,7 +56,8 @@ const post = async (url: string, body?: any) => {
     const res = await xios.post(url, body);
     return res.data;
   } catch (error) {
-    handleErrorPost(error);
+    const resError = handleErrorPost(error);
+    if (resError) return resError;
   }
 };
 
