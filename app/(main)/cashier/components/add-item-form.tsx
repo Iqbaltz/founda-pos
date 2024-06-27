@@ -63,9 +63,13 @@ export default function AddItemForm({ append, products }: Props) {
       (product) => product.id === Number(form.getValues().barang_id)
     );
     if (!selectedProduct) return;
+
     setSelectedPrice(
       selectedProduct[`harga_jual_${form.watch().transaction_type ?? "satuan"}`]
     );
+
+    // set harga_modal
+    form.setValue("harga_modal", selectedProduct[`harga_modal`]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch().barang_id, form.watch().transaction_type]);
