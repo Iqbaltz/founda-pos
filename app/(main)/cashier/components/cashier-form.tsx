@@ -28,6 +28,7 @@ import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 type Props = {
   customers: CustomerEntity[];
@@ -45,7 +46,7 @@ export default function CashierForm({
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
-      transaction_date: new Date().toISOString().split("T")[0],
+      transaction_date: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
       customer_id: "0",
     },
   });
@@ -74,7 +75,7 @@ export default function CashierForm({
       customer_id: data.customer_id === "0" ? null : data.customer_id,
     });
 
-    if (res.status === "offline") {
+    if (res?.status === "offline") {
       form.reset(
         {
           ...data,
