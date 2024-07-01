@@ -187,7 +187,7 @@ export function DataTable<TData, TValue>({
         <div className="flex space-x-2">
           <StaticPagination
             activePage={activePage}
-            lastPage={Math.ceil(data.length / activeLimit)}
+            lastPage={Math.ceil(data?.length / activeLimit)}
             limit={activeLimit}
             setLimit={setActiveLimit}
             onPageChange={(page) => onPageChange(page)}

@@ -1,14 +1,30 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { CashierEntity } from "@/src/entity/cashier-entity";
+import { cashierService } from "@/src/service/cashier";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { TrashIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 type Props = {};
 
 export default function SyncTransactionList({}: Props) {
+  const { addTransaction, getCashierTransactionHtml } = cashierService;
+  const router = useRouter();
   const cashierTransaction =
     typeof window !== "undefined"
       ? window.localStorage.getItem("cashierTransaction")
@@ -16,6 +32,55 @@ export default function SyncTransactionList({}: Props) {
   const cashierTransactionParsed = JSON.parse(
     cashierTransaction || "[]"
   ) as CashierEntity[];
+
+  const printLiveReceipt = async (id: number) => {
+    const html = await getCashierTransactionHtml(String(id));
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+    printWindow?.document.write(html);
+
+    // Add a print command
+    printWindow?.document.close();
+    printWindow?.focus();
+    printWindow?.print();
+    printWindow?.close();
+  };
+
+  const handleSyncTransaction = async (transaction: CashierEntity) => {
+    const res = await addTransaction(transaction);
+
+    if (res?.id) {
+      await printLiveReceipt(res?.id);
+      alert("Transaksi berhasil!");
+      router.push("/cashier-transaction");
+
+      const cashierTransaction = JSON.parse(
+        localStorage.getItem("cashierTransaction") || "[]"
+      );
+      const newCashierTransaction = cashierTransaction.filter(
+        (item: CashierEntity) =>
+          item.transaction_date !== transaction.transaction_date
+      );
+      localStorage.setItem(
+        "cashierTransaction",
+        JSON.stringify(newCashierTransaction)
+      );
+    }
+  };
+
+  const handleDeleteTransaction = async (transaction_date: string) => {
+    const cashierTransaction = JSON.parse(
+      localStorage.getItem("cashierTransaction") || "[]"
+    );
+    const newCashierTransaction = cashierTransaction.filter(
+      (item: CashierEntity) => item.transaction_date !== transaction_date
+    );
+    localStorage.setItem(
+      "cashierTransaction",
+      JSON.stringify(newCashierTransaction)
+    );
+
+    router.refresh();
+  };
 
   const columns: ColumnDef<CashierEntity>[] = [
     {
@@ -34,7 +99,10 @@ export default function SyncTransactionList({}: Props) {
       cell: ({ row }) => {
         return (
           <div>
-            {format(new Date(row.original.transaction_date), "dd MMM yyyy")}
+            {format(
+              new Date(row.original.transaction_date),
+              "dd MMM yyyy, hh:mm"
+            )}
           </div>
         );
       },
@@ -62,9 +130,9 @@ export default function SyncTransactionList({}: Props) {
       cell: ({ row }) => {
         return (
           <div>
-            {row.original.items.map((item: any) => {
+            {row.original.items.map((item: any, idx: number) => {
               return (
-                <span key={item.barang_id}>
+                <span key={idx}>
                   ~{item.transaction_type}-{item.barang_id}-{item.qty}{" "}
                 </span>
               );
@@ -102,20 +170,38 @@ export default function SyncTransactionList({}: Props) {
             <Button
               size="sm"
               onClick={() => {
-                console.log(row.original);
+                handleSyncTransaction(row.original);
               }}
             >
               Sync
             </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => {
-                console.log(row.original);
-              }}
-            >
-              Delete
-            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <TrashIcon
+                  size={18}
+                  className="text-destructive cursor-pointer"
+                />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Hapus item</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Apakah kamu yakin ingin menghapus item ini?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => {
+                      handleDeleteTransaction(row.original.transaction_date);
+                    }}
+                  >
+                    Ya
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         );
       },

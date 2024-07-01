@@ -26,23 +26,31 @@ import { CustomerEntity } from "@/src/entity/customer-entity";
 import { ProductEntity } from "@/src/entity/product-entity";
 import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
+import { format, sub } from "date-fns";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
+import Invoice from "@/components/invoice";
+import { StoreInformationEntity } from "@/src/entity/store-information-entity";
 
 type Props = {
   customers: CustomerEntity[];
   products: ProductEntity[];
   paymentMethods: PaymentMethodEntity[];
+  storeInformation: StoreInformationEntity | null;
 };
 
 export default function CashierForm({
   customers,
   products,
   paymentMethods,
+  storeInformation,
 }: Props) {
+  const componentRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({ content: () => componentRef.current });
   const router = useRouter();
   const session: any = useSession();
+  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
@@ -83,6 +91,7 @@ export default function CashierForm({
         },
         { keepValues: false }
       );
+      handlePrint();
     } else if (res?.id) {
       await printLiveReceipt(res?.id);
       form.reset();
@@ -99,8 +108,79 @@ export default function CashierForm({
     [session?.data?.id]
   );
 
+  useEffect(() => {
+    setCreatedAt(format(new Date(), "yyyy-MM-dd hh:mm:ss"));
+  }, []);
+
+  const customerData = {
+    name:
+      form.watch("customer_id") === "0"
+        ? "UMUM"
+        : customers?.find(
+            (customer) => customer.id === Number(form.watch("customer_id"))
+          )?.name || "UMUM",
+    address:
+      customers?.find(
+        (customer) => customer.id === Number(form.watch("customer_id"))
+      )?.address || "-",
+    phone_number:
+      customers?.find(
+        (customer) => customer.id === Number(form.watch("customer_id"))
+      )?.phone_number || "-",
+  };
+
+  const invoiceItems =
+    fieldArray.fields.map((item, index) => {
+      const selectedProduct: any = products?.find(
+        (product) => product.id === Number(item.barang_id)
+      );
+      return {
+        no: index + 1,
+        name: selectedProduct?.name,
+        qty: item.qty,
+        price: selectedProduct?.[`harga_jual_${item.transaction_type}`],
+        amount:
+          item.qty * selectedProduct?.[`harga_jual_${item.transaction_type}`],
+      };
+    }) || [];
+
+  const cashierInfo = {
+    subtotal: invoiceItems.reduce((acc, item) => acc + item.amount, 0),
+    discount: form.watch("discount") || 0,
+    total:
+      invoiceItems.reduce((acc, item) => acc + item.amount, 0) -
+      form.watch("discount"),
+    cash: form.watch("payment_amount") || 0,
+    change:
+      form.watch("payment_amount") -
+      (invoiceItems.reduce((acc, item) => acc + item.amount, 0) -
+        form.watch("discount")),
+  };
+
+  const invoiceData = {
+    store_name: storeInformation?.name || "",
+    store_address: storeInformation?.address || "",
+    store_phone_number: storeInformation?.phone_number || "",
+    no_nota: "~",
+    kasir: session?.data?.user?.name,
+    pelanggan: customerData.name,
+    alamat: customerData.address,
+    no_telp: customerData.phone_number,
+    items: invoiceItems,
+    subtotal: cashierInfo.subtotal,
+    diskon: cashierInfo.discount,
+    total: cashierInfo.total,
+    tunai: cashierInfo.cash,
+    kembalian: cashierInfo.change,
+    created_at: createdAt,
+  };
+
   return (
-    <>
+    <div>
+      <Button onClick={handlePrint}>Print</Button>
+      <div ref={componentRef} className="hidden print:block">
+        <Invoice {...invoiceData} />
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -170,6 +250,6 @@ export default function CashierForm({
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

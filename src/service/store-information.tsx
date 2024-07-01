@@ -7,7 +7,8 @@ const getStoreInformation = async () => {
 };
 
 const getStoreInformationServer = async () => {
-  return await fetchWrapperServer.get(`/store-information`);
+  return (await fetchWrapperServer.get(`/store-information`))
+    ?.data as StoreInformationEntity;
 };
 
 const editStoreInformation = async (payload: StoreInformationEntity) => {

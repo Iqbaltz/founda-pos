@@ -99,7 +99,6 @@ const download = async (url: string) => {
     const blob = new Blob([res.data], { type: res.data.type });
 
     const contentDisposition = res.headers["content-disposition"];
-    console.log(res.headers);
     let filename = "download";
 
     if (contentDisposition && contentDisposition.includes("attachment")) {

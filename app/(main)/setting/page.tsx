@@ -11,9 +11,9 @@ export default async function EditSettingPage() {
     <div>
       <PageHeader title="Edit Setting" />
       <EditForm
-        storeName={setting?.data?.name}
-        storeAddress={setting?.data?.address}
-        storePhoneNumber={setting?.data?.phone_number}
+        storeName={setting?.name}
+        storeAddress={setting?.address}
+        storePhoneNumber={setting?.phone_number}
       />
     </div>
   );
