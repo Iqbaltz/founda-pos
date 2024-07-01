@@ -177,7 +177,6 @@ export default function CashierForm({
 
   return (
     <div>
-      <Button onClick={handlePrint}>Print</Button>
       <div ref={componentRef} className="hidden print:block">
         <Invoice {...invoiceData} />
       </div>
