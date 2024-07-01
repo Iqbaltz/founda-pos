@@ -35,8 +35,6 @@ export default function CashierTransactionList() {
     500
   );
 
-  console.log("cashierTransactions", cashierTransactions);
-
   const printLiveReceipt = async (id: number) => {
     const html = await getCashierTransactionHtml(String(id));
     const printWindow = window.open("", "_blank", "width=800,height=600");

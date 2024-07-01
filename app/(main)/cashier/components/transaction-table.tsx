@@ -60,6 +60,10 @@ export default function TransactionTable({
     form.setValue("payment_method_id", paymentMethod);
   }, [potongan, paymentMethod, form, bayar]);
 
+  useEffect(() => {
+    setBayar(0);
+  }, [form.formState.isSubmitSuccessful]);
+
   return (
     <>
       <AddItemForm append={append} products={products} />
