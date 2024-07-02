@@ -1,3 +1,5 @@
+import withPWA from './next-pwa.config.js';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
@@ -7,4 +9,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);
