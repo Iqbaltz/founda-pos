@@ -54,7 +54,7 @@ export default function CashierForm({
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
-      transaction_date: format(new Date(), "yyyy-MM-dd hh:mm:ss"),
+      transaction_date: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
       customer_id: "0",
     },
   });
@@ -109,7 +109,7 @@ export default function CashierForm({
   );
 
   useEffect(() => {
-    setCreatedAt(format(new Date(), "yyyy-MM-dd hh:mm:ss"));
+    setCreatedAt(format(new Date(), "yyyy-MM-dd HH:mm:ss"));
   }, []);
 
   const customerData = {

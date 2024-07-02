@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 const isLoggedIn = async () => {};
 
 export const Utils = {};
@@ -37,15 +39,18 @@ export const changeDateTimeToNow = (value: Date) => {
 
 export const formatDate = (value: Date) => {
   const date = new Date(value);
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  const newDate = date.toLocaleDateString(
-    "id-ID",
-    options as Intl.DateTimeFormatOptions
-  );
+
+  const newDate = format(date, "dd MMM yyyy, HH:mm");
   return newDate;
+};
+
+// Function to save data to local storage
+export const saveDataToLocalStorage = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+// Function to load data from local storage
+export const loadDataFromLocalStorage = (key: string) => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
 };

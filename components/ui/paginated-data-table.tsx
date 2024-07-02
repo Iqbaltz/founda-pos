@@ -154,7 +154,7 @@ export function PaginatedDataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
-          {data.summary ? (
+          {data?.summary ? (
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={5}></TableCell>
