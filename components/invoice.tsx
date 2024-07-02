@@ -1,6 +1,7 @@
 "use client";
 import { format } from "date-fns";
 import React from "react";
+import "./print.css";
 
 interface Item {
   no: number;
@@ -47,12 +48,11 @@ const Invoice: React.FC<InvoiceProps> = ({
 }) => {
   return (
     <div
+      className="invoice"
       style={{
         fontFamily: "sans-serif",
         width: "100%",
-        maxWidth: "28rem",
         margin: "0 auto",
-        padding: "0.5rem",
       }}
     >
       <div style={{ textAlign: "center", marginBottom: "0.5rem" }}>
@@ -134,7 +134,6 @@ const Invoice: React.FC<InvoiceProps> = ({
                   borderBottom: "1px dashed gray",
                   padding: "0.25rem",
                   textAlign: "left",
-                  minWidth: "80px",
                 }}
               >
                 Harga

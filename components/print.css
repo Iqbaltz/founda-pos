@@ -1,0 +1,17 @@
+@media print {
+    @page {
+      size: 80mm auto; /* Set the page size to 80mm width */
+      margin: 0; /* Optional: Remove margins */
+    }
+    
+    /* Additional styles for printing */
+    body {
+      margin: 0;
+    }
+    
+    .invoice {
+      width: 80mm; /* Ensure the invoice fits within the page */
+      padding: 0;
+    }
+  }
+  
