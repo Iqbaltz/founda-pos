@@ -3,7 +3,7 @@
     "background_color": "#03253f",
     "display": "standalone",
     "scope": "/",
-    "start_url": "/cashier",
+    "start_url": "/",
     "name": "Kasir Pursida",
     "short_name": "Pursida",
     "icons": [
