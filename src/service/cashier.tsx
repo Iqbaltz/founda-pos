@@ -30,6 +30,10 @@ const editTransaction = async (id: string, payload: CashierEntity) => {
   return await fetchWrapper.post(`/cashier-transaction/${id}`, payload);
 };
 
+const deleteTransaction = async (id: number) => {
+  return await fetchWrapper.remove(`/cashier-transaction/${id}`);
+};
+
 const getAllCashierTransactions = async (
   page: string,
   limit: number,
@@ -65,6 +69,7 @@ const exportExcelCashierTransactions = async () => {
 export const cashierService = {
   addTransaction,
   editTransaction,
+  deleteTransaction,
   getAllCashierTransactions,
   getCashierTransactionServer,
   printReceipt,
