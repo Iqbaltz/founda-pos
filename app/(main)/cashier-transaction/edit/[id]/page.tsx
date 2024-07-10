@@ -1,9 +1,9 @@
-import PageHeader from "@/components/layout/page-header";
 import { cashierService } from "@/src/service/cashier";
 import React from "react";
 import EditCashierForm from "./components/edit-cashier-form";
 import { productService } from "@/src/service/product";
 import { paymentMethodService } from "@/src/service/payment-method";
+import EditCashierHeader from "./components/edit-cashier-header";
 
 type Props = {
   params: {
@@ -22,7 +22,7 @@ export default async function EditCashierTransactionPage({ params }: Props) {
 
   return (
     <div>
-      <PageHeader title={transactionDetail?.transaction_number} />
+      <EditCashierHeader transactionDetail={transactionDetail} />
       <EditCashierForm
         transactionDetail={transactionDetail}
         products={products}

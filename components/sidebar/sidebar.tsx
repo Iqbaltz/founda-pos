@@ -1,7 +1,6 @@
 import { useSidebarContext } from "@/src/context/layout-context";
 import React from "react";
 import CollapsableItem from "./collapsable-item";
-import Link from "next/link";
 import {
   BadgeDollarSignIcon,
   BoxIcon,
@@ -81,7 +80,7 @@ export default function Sidebar({}: Props) {
   const { collapsed, setCollapsed } = useSidebarContext();
 
   return (
-    <aside className="sticky top-0 z-50 h-screen flex">
+    <aside className="top-0 z-50 sticky flex h-screen">
       {collapsed ? (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 md:invisible"
@@ -95,11 +94,11 @@ export default function Sidebar({}: Props) {
             : "md:static md:-translate-x-0 -translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-4">
+        <div className="flex justify-between items-center p-4">
           <h1 className="font-bold">UD. Pursida</h1>
         </div>
 
-        <div className="flex flex-col overflow-y-auto mt-4">
+        <div className="flex flex-col mt-4 overflow-y-auto">
           {sidebarItems.map((item, index) => {
             if (item.sub) {
               return (
@@ -117,7 +116,7 @@ export default function Sidebar({}: Props) {
                   name={item?.name}
                   url={item?.link}
                   icon={item?.icon}
-                  isActive={pathname === item?.link}
+                  isActive={`${pathname}/`.startsWith(`${item?.link}/`)}
                 />
               );
             }

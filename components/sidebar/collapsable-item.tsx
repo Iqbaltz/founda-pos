@@ -18,7 +18,9 @@ type Props = {
 export default function CollapsableItem({ name, sub, icon }: Props) {
   const pathname = usePathname();
 
-  const isPathMaster = sub.some((item) => pathname === item.link);
+  const isPathMaster = sub.some((item) =>
+    `${pathname}/`.startsWith(`${item.link}/`)
+  );
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value={name} className="border-none">
@@ -34,7 +36,7 @@ export default function CollapsableItem({ name, sub, icon }: Props) {
         </AccordionTrigger>
         <AccordionContent className="flex flex-col">
           {sub.map((item, index) => {
-            const isActive = pathname === item.link;
+            const isActive = `${pathname}/`.startsWith(`${item.link}/`);
             return (
               <Link
                 href={item.link}
