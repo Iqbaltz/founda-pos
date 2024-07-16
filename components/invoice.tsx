@@ -116,6 +116,7 @@ const Invoice: React.FC<InvoiceProps> = ({
                   padding: "0.25rem",
                   textAlign: "left",
                   minWidth: "88px",
+                  maxWidth: "104px",
                 }}
               >
                 Nama Barang
