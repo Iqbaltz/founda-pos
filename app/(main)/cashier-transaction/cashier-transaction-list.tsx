@@ -1,6 +1,12 @@
 "use client";
 import { ColumnDef, SortingState } from "@tanstack/react-table";
-import { ArrowUpDown, DownloadIcon, EditIcon, PrinterIcon } from "lucide-react";
+import {
+  ArrowUpDown,
+  DownloadIcon,
+  EditIcon,
+  PrinterIcon,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +17,17 @@ import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entit
 import { cashierService } from "@/src/service/cashier";
 import { numberToRupiah } from "@/src/helpers/numberToRupiah";
 import debounce from "lodash.debounce";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function CashierTransactionList() {
   const [cashierTransactions, setCashierTransactions] =
@@ -20,10 +37,11 @@ export default function CashierTransactionList() {
     printReceipt,
     exportExcelCashierTransactions,
     getCashierTransactionHtml,
+    deleteTransaction,
   } = cashierService;
 
   const fetchCashierTransactions = debounce(
-    async (page: number, limit: number, key: string, sorts: SortingState) => {
+    async (page: number, limit: number, key?: string, sorts?: SortingState) => {
       const data = await getAllCashierTransactions(
         String(page || 1),
         limit,
@@ -56,7 +74,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Nomor Transaksi
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -70,7 +88,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Tanggal transaksi
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -85,7 +103,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Nama Kasir
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -100,7 +118,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Nama Pelanggan
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -114,7 +132,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Total Barang
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -135,7 +153,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Potongan
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -156,7 +174,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Total Biaya
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -181,7 +199,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Kas Masuk
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -202,7 +220,7 @@ export default function CashierTransactionList() {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Status
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 w-4 h-4" />
           </Button>
         );
       },
@@ -224,16 +242,43 @@ export default function CashierTransactionList() {
           <Link href={`./cashier-transaction/edit/${row?.original?.id}`}>
             <EditIcon size={18} className="text-yellow-500" />
           </Link>
+          <AlertDialog>
+            <AlertDialogTrigger>
+              <Trash size={18} className="text-destructive" />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Hapus Transaksi</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Apakah kamu yakin ingin menghapus Transaksi ini?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async () => {
+                    const res = await deleteTransaction(row?.original?.id);
+                    if (res) {
+                      alert("Produk berhasil dihapus");
+                      fetchCashierTransactions(1, 10);
+                    }
+                  }}
+                >
+                  Ya
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <DownloadIcon
             size={18}
-            className="cursor-pointer text-green-500"
+            className="text-green-500 cursor-pointer"
             onClick={async () => {
               await printReceipt(row?.original?.id);
             }}
           />
           <PrinterIcon
             size={18}
-            className="cursor-pointer text-blue-500"
+            className="text-blue-500 cursor-pointer"
             onClick={async () => {
               await printLiveReceipt(row?.original?.id);
             }}

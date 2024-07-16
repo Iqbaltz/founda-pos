@@ -37,14 +37,14 @@ const deleteTransaction = async (id: number) => {
 const getAllCashierTransactions = async (
   page: string,
   limit: number,
-  searchKey: string,
-  sorts: SortingState
+  searchKey?: string,
+  sorts?: SortingState
 ) => {
   const res = await fetchWrapper.get(`/cashier-transaction`, {
     page,
     results: limit,
-    search: searchKey,
-    orders: sorts,
+    search: searchKey || "",
+    orders: sorts || [],
   });
   res.data["summary"] = res.summary;
   return res?.data as PaginatedModel<CashierTransactionEntity>;
