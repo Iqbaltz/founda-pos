@@ -64,7 +64,8 @@ export default function CashierForm({
     name: "items",
   });
 
-  const { addTransaction, getCashierTransactionHtml } = cashierService;
+  const { addTransaction, getCashierTransactionHtml, printReceipt } =
+    cashierService;
 
   const printLiveReceipt = async (id: number) => {
     const html = await getCashierTransactionHtml(String(id));
@@ -93,10 +94,21 @@ export default function CashierForm({
       );
       handlePrint();
     } else if (res?.id) {
-      await printLiveReceipt(res?.id);
-      form.reset();
-      alert("Transaksi berhasil!");
-      router.push("/cashier-transaction");
+      const isAutoDownload = JSON.parse(
+        localStorage.getItem("autoDownload") || "false"
+      );
+
+      if (isAutoDownload) {
+        await printReceipt(res?.id);
+        form.reset();
+        alert("Transaksi berhasil!");
+        router.push("/cashier-transaction");
+      } else {
+        await printLiveReceipt(res?.id);
+        form.reset();
+        alert("Transaksi berhasil!");
+        router.push("/cashier-transaction");
+      }
     }
   }
 
@@ -177,7 +189,7 @@ export default function CashierForm({
 
   return (
     <div>
-      <div ref={componentRef} className="hidden print:block">
+      <div ref={componentRef} className="print:block hidden">
         <Invoice {...invoiceData} />
       </div>
       <Form {...form}>

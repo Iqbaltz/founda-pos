@@ -94,7 +94,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4 gap-4">
+      <div className="flex justify-between items-center gap-4 pb-4">
         <Input
           placeholder="Cari..."
           className="max-w-sm"
@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
             <Link href={addLink}>
               <Button
                 variant={"secondary"}
-                className="flex items-center justify-center gap-1"
+                className="flex justify-center items-center gap-1"
               >
                 <PlusIcon size={18} />
                 Tambah
@@ -121,13 +121,13 @@ export function DataTable<TData, TValue>({
           )}
         </div>
       </div>
-      <div className="flex justify-between mb-1 text-sm opacity-70">
+      <div className="flex justify-between opacity-70 mb-1 text-sm">
         <span>
           Total {table.getRowCount()} {name}
         </span>
         <span>Rows per page: {table.getState().pagination.pageSize}</span>
       </div>
-      <div className="rounded-md border">
+      <div className="border rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

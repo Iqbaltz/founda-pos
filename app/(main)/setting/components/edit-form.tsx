@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,9 +13,9 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { StoreInformationSchema } from "@/src/entity/store-information-entity";
 import { storeInformationService } from "@/src/service/store-information";
+import { Switch } from "@/components/ui/switch";
 
 type Props = {
   storeName: string;
@@ -28,7 +28,9 @@ export default function EditForm({
   storeAddress,
   storePhoneNumber,
 }: Props) {
-  const router = useRouter();
+  const [isAutoDownload, setIsAutoDownload] = useState(
+    JSON.parse(localStorage.getItem("autoDownload") || "false")
+  );
 
   const form = useForm<z.infer<typeof StoreInformationSchema>>({
     resolver: zodResolver(StoreInformationSchema),
@@ -51,6 +53,11 @@ export default function EditForm({
       location.href = "/setting";
     }
   }
+
+  const handleOnSwitchAutoDownload = (e: boolean) => {
+    setIsAutoDownload(e);
+    localStorage.setItem("autoDownload", JSON.stringify(!isAutoDownload));
+  };
 
   return (
     <Form {...form}>
@@ -94,6 +101,13 @@ export default function EditForm({
             </FormItem>
           )}
         />
+        <div className="flex items-center gap-2 py-2 text-sm">
+          <p>Auto Download Receipt</p>
+          <Switch
+            onCheckedChange={handleOnSwitchAutoDownload}
+            checked={isAutoDownload}
+          />
+        </div>
         <Button type="submit">Simpan</Button>
       </form>
     </Form>
