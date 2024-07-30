@@ -28,9 +28,7 @@ export default function EditForm({
   storeAddress,
   storePhoneNumber,
 }: Props) {
-  const [isAutoDownload, setIsAutoDownload] = useState(
-    JSON.parse(localStorage.getItem("autoDownload") || "false")
-  );
+  const [isAutoDownload, setIsAutoDownload] = useState(false);
 
   const form = useForm<z.infer<typeof StoreInformationSchema>>({
     resolver: zodResolver(StoreInformationSchema),
@@ -58,6 +56,13 @@ export default function EditForm({
     setIsAutoDownload(e);
     localStorage.setItem("autoDownload", JSON.stringify(!isAutoDownload));
   };
+
+  useEffect(() => {
+    const autoDownload = JSON.parse(
+      localStorage.getItem("autoDownload") || "false"
+    );
+    setIsAutoDownload(autoDownload);
+  }, []);
 
   return (
     <Form {...form}>
