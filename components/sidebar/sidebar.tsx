@@ -19,6 +19,11 @@ type Props = {};
 
 const sidebarItems = [
   {
+    name: "Dashboard",
+    link: "/dashboard",
+    icon: <BadgeDollarSignIcon />,
+  },
+  {
     name: "Kasir",
     link: "/cashier",
     icon: <BadgeDollarSignIcon />,
@@ -83,7 +88,7 @@ export default function Sidebar({}: Props) {
     <aside className="top-0 z-50 sticky flex h-screen">
       {collapsed ? (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 md:invisible"
+          className="md:invisible fixed inset-0 bg-black bg-opacity-50"
           onClick={() => setCollapsed()}
         ></div>
       ) : null}

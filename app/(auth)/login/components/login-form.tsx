@@ -24,17 +24,21 @@ export default function LoginForm({}: Props) {
   const router = useRouter();
   const form = useForm<LoginEntity>({
     resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "admin@testing.com",
+      password: "password",
+    },
   });
 
   const onSubmit = (data: LoginEntity) => {
     signIn("credentials", {
       email: data.email,
       password: data.password,
-      callbackUrl: "/cashier",
+      callbackUrl: "/dashboard",
       redirect: false,
     }).then(({ ok }: any) => {
       if (ok) {
-        router.push("/cashier");
+        router.push("/dashboard");
         router.refresh();
       } else {
         alert("Login failed");
@@ -71,7 +75,7 @@ export default function LoginForm({}: Props) {
                       {...field}
                       type={showPassword ? "text" : "password"}
                     />
-                    <span className="absolute right-2 top-2">
+                    <span className="top-2 right-2 absolute">
                       {showPassword ? (
                         <EyeOffIcon
                           className="cursor-pointer"
@@ -92,7 +96,7 @@ export default function LoginForm({}: Props) {
           />
         </div>
         <Button
-          className="w-full mt-4"
+          className="mt-4 w-full"
           type="submit"
           disabled={form.formState.isSubmitting}
         >
