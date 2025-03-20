@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Kasir Pursida",
-    "short_name": "Pursida",
+    "name": "FoundaPOS",
+    "short_name": "Founda",
     "icons": [
         {
             "src": "/icon-192x192.png",
