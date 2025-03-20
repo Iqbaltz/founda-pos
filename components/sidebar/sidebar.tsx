@@ -3,6 +3,7 @@ import React from "react";
 import CollapsableItem from "./collapsable-item";
 import {
   BadgeDollarSignIcon,
+  BarChartBig,
   BoxIcon,
   BrickWallIcon,
   FolderSync,
@@ -21,7 +22,7 @@ const sidebarItems = [
   {
     name: "Dashboard",
     link: "/dashboard",
-    icon: <BadgeDollarSignIcon />,
+    icon: <BarChartBig />,
   },
   {
     name: "Kasir",
