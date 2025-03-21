@@ -1,9 +1,6 @@
 "use client";
 import React from "react";
 import {
-  BarChart,
-  Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,31 +13,41 @@ import {
 
 const data = [
   {
-    name: "7 Hari Lalu",
+    name: new Date(
+      new Date().setDate(new Date().getDate() - 5)
+    ).toLocaleDateString(),
     Total: 2400,
   },
   {
-    name: "6 Hari Lalu",
+    name: new Date(
+      new Date().setDate(new Date().getDate() - 4)
+    ).toLocaleDateString(),
     Total: 1398,
   },
   {
-    name: "5 Hari Lalu",
+    name: new Date(
+      new Date().setDate(new Date().getDate() - 4)
+    ).toLocaleDateString(),
     Total: 5800,
   },
   {
-    name: "4 Hari Lalu",
+    name: new Date(
+      new Date().setDate(new Date().getDate() - 3)
+    ).toLocaleDateString(),
     Total: 3908,
   },
   {
-    name: "3 Hari Lalu",
+    name: new Date(
+      new Date().setDate(new Date().getDate() - 2)
+    ).toLocaleDateString(),
     Total: 4800,
   },
   {
-    name: "2 Hari Lalu",
+    name: "Yesterday",
     Total: 3800,
   },
   {
-    name: "1 Hari Lalu",
+    name: "Today",
     Total: 6300,
   },
 ];
