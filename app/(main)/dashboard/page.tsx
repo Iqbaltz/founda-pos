@@ -1,14 +1,12 @@
 import PageHeader from "@/components/layout/page-header";
-import { Building2Icon, HammerIcon } from "lucide-react";
 import React from "react";
+import SalesOverview from "./components/overview/sales-overview";
 
-type Props = {};
-
-const DashboardPage = (props: Props) => {
+const DashboardPage = () => {
   return (
     <div>
       <PageHeader title="Dashboard" />
-      <h1>Currently on progress... ⚒️🧑‍💻</h1>
+      <SalesOverview />
     </div>
   );
 };
