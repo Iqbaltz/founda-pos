@@ -1,64 +1,40 @@
 "use client";
+import { formatCurrency } from "@/src/helpers/utils";
 import React from "react";
 import {
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-  Line,
-  LineChart,
 } from "recharts";
 
-const data = [
-  {
-    name: new Date(
-      new Date().setDate(new Date().getDate() - 5)
-    ).toLocaleDateString(),
-    Total: 2400,
-  },
-  {
-    name: new Date(
-      new Date().setDate(new Date().getDate() - 4)
-    ).toLocaleDateString(),
-    Total: 1398,
-  },
-  {
-    name: new Date(
-      new Date().setDate(new Date().getDate() - 4)
-    ).toLocaleDateString(),
-    Total: 5800,
-  },
-  {
-    name: new Date(
-      new Date().setDate(new Date().getDate() - 3)
-    ).toLocaleDateString(),
-    Total: 3908,
-  },
-  {
-    name: new Date(
-      new Date().setDate(new Date().getDate() - 2)
-    ).toLocaleDateString(),
-    Total: 4800,
-  },
-  {
-    name: "Yesterday",
-    Total: 3800,
-  },
-  {
-    name: "Today",
-    Total: 6300,
-  },
-];
-const SalesChart = () => {
+type SalesTrendData = {
+  date: string;
+  sales: number;
+};
+
+type Props = {
+  data: SalesTrendData[];
+};
+
+const SalesChart = ({ data }: Props) => {
+  // Format date for display (e.g., "Mar 15")
+  const formattedData = data.map((item) => ({
+    ...item,
+    displayDate: new Date(item.date).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    }),
+  }));
+
   return (
-    <div className="w-full h-96">
+    <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          width={500}
-          height={300}
-          data={data}
+          data={formattedData}
           margin={{
             top: 5,
             right: 30,
@@ -67,15 +43,16 @@ const SalesChart = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="displayDate" />
           <YAxis />
-          <Tooltip wrapperClassName="bg-primary-foreground" />
-          <Legend />
+          <Tooltip formatter={(value) => formatCurrency(value as number)} />
           <Line
             type="monotone"
-            dataKey="Total"
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
+            dataKey="sales"
+            stroke="#3b82f6"
+            strokeWidth={2}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
           />
         </LineChart>
       </ResponsiveContainer>
