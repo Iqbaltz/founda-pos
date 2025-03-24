@@ -9,8 +9,8 @@ import {
   LucideUsers,
 } from "lucide-react";
 import { dashboardService } from "@/src/service/dashboard";
-import { formatCurrency } from "@/src/helpers/utils";
 import { DashboardEntity } from "@/src/entity/dashboard-entity";
+import { formatCurrency } from "@/src/helpers/utils";
 
 export default function SalesOverview() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,7 +50,7 @@ export default function SalesOverview() {
           <div>
             <p className="text-gray-500 text-sm">Total Sales</p>
             <h2 className="font-bold text-2xl">
-              {formatCurrency(dashboardData.total_sales)}
+              {formatCurrency(Number(dashboardData.total_sales))}
             </h2>
           </div>
           <LucideShoppingCart size={32} className="text-blue-500" />
@@ -98,12 +98,18 @@ export default function SalesOverview() {
       <Card className="col-span-1 p-4">
         <h3 className="mb-2 font-bold text-lg">Top Selling Items</h3>
         <ul>
-          {dashboardData.top_selling_items.map((item, index) => (
+          <li className="flex justify-between items-center p-2 border-gray-200 border-b">
+            <span className="line-clamp-1">PRODUCT NAME</span>
+            <span>SOLD</span>
+          </li>
+          {dashboardData.top_selling_items?.slice(0, 5).map((item, index) => (
             <li
               key={index}
               className="flex justify-between items-center p-2 border-gray-200 border-b"
             >
-              <span className="line-clamp-1">{item.product_name}</span>
+              <span className="line-clamp-1">
+                {index + 1}. {item.product_name}
+              </span>
               <span>{item.sold}</span>
             </li>
           ))}

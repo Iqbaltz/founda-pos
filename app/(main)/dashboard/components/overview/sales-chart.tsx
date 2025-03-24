@@ -45,7 +45,10 @@ const SalesChart = ({ data }: Props) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="displayDate" />
           <YAxis />
-          <Tooltip formatter={(value) => formatCurrency(value as number)} />
+          <Tooltip
+            wrapperClassName="!bg-secondary"
+            formatter={(value) => formatCurrency(Number(value))}
+          />
           <Line
             type="monotone"
             dataKey="sales"

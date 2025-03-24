@@ -5,7 +5,7 @@ const isLoggedIn = async () => {};
 export const Utils = {};
 
 export const formatCurrency = (value: number) => {
-  return `Rp. ${value.toLocaleString("id-ID")},-`;
+  return `Rp. ${value.toLocaleString("id-ID")}`;
 };
 
 export const formatBoolean = (value: boolean) => {

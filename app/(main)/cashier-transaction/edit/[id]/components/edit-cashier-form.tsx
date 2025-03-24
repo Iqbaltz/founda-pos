@@ -50,7 +50,9 @@ export default function EditCashierForm({
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
-      transaction_date: new Date().toISOString().split("T")[0],
+      transaction_date: new Date(new Date().getDate() - 1)
+        .toISOString()
+        .split("T")[0],
       customer_id: transactionDetail?.customer_id
         ? String(transactionDetail?.customer_id)
         : null,
@@ -61,6 +63,7 @@ export default function EditCashierForm({
         barang_id: String(item.barang_id),
         qty: item.qty,
         transaction_type: item.transaction_type,
+        harga_modal: 0,
       })),
     },
   });
@@ -71,9 +74,12 @@ export default function EditCashierForm({
     name: "items",
   });
 
+  console.log("errors", form.formState.errors);
+
   const { editTransaction } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
+    console.log("submit");
     if (!isPaid) {
       const res = await editTransaction(String(transactionId), {
         ...data,
@@ -161,7 +167,7 @@ export default function EditCashierForm({
           paymentMethods={paymentMethods}
           isDisabled={isPaid}
         />
-        <div className="flex fap justify-end">
+        <div className="flex justify-end fap">
           <Button
             onClick={handlePrintReceipt}
             className="mr-4"
@@ -172,7 +178,7 @@ export default function EditCashierForm({
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
-            disabled={form?.formState?.isSubmitting || isPaid}
+            disabled={form?.formState?.isSubmitting}
           >
             Bayar Sisa
           </Button>
