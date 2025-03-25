@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="./favicon.ico" />
+        <link rel="icon" href="./fvicon.ico" />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={cn("font-sans", fontSans.variable)}>
