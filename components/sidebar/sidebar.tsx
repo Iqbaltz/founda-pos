@@ -100,7 +100,8 @@ export default function Sidebar({}: Props) {
             : "md:static md:-translate-x-0 -translate-x-full"
         }`}
       >
-        <div className="flex justify-between items-center p-4">
+        <div className="flex items-center p-4">
+          <img src="/foundapos.svg" className="mr-2" alt="FoundaPOS" />
           <h1 className="font-bold">Founda POS</h1>
         </div>
 
