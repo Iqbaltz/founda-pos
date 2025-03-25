@@ -22,11 +22,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import EditTransactionTable from "./edit-transaction-table";
-import { CustomerEntity } from "@/src/entity/customer-entity";
 import { ProductEntity } from "@/src/entity/product-entity";
 import { PaymentMethodEntity } from "@/src/entity/payment-method-entity";
 import { useSession } from "next-auth/react";
-import { CanvasHTMLAttributes, useEffect } from "react";
+import { useEffect } from "react";
 import { CashierTransactionEntity } from "@/src/entity/cashier-transaction-entity";
 import { useParams, useRouter } from "next/navigation";
 import { DownloadIcon } from "lucide-react";
@@ -73,8 +72,6 @@ export default function EditCashierForm({
     control: form.control,
     name: "items",
   });
-
-  console.log("errors", form.formState.errors);
 
   const { editTransaction } = cashierService;
 
@@ -178,7 +175,7 @@ export default function EditCashierForm({
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
-            disabled={form?.formState?.isSubmitting}
+            disabled={form?.formState?.isSubmitting || isPaid}
           >
             Bayar Sisa
           </Button>
