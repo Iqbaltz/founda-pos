@@ -30,6 +30,29 @@ const SalesChart = ({ data }: Props) => {
     }),
   }));
 
+  function formatNumber(num: number) {
+    // Absolute value to handle negative numbers
+    const absNum = Math.abs(num);
+
+    // Billions
+    if (absNum >= 1_000_000_000) {
+      return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
+    }
+
+    // Millions
+    if (absNum >= 1_000_000) {
+      return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+    }
+
+    // Thousands
+    if (absNum >= 1_000) {
+      return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+    }
+
+    // Return original number as string if less than 1000
+    return num.toString();
+  }
+
   return (
     <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
@@ -44,7 +67,7 @@ const SalesChart = ({ data }: Props) => {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="displayDate" />
-          <YAxis />
+          <YAxis tickFormatter={(value) => formatNumber(value)} />
           <Tooltip
             wrapperClassName="!bg-secondary"
             formatter={(value) => formatCurrency(Number(value))}
