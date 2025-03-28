@@ -49,7 +49,7 @@ export default function EditCashierForm({
   const form = useForm<z.infer<typeof CashierSchema>>({
     resolver: zodResolver(CashierSchema),
     defaultValues: {
-      transaction_date: new Date(new Date().getDate() - 1)
+      transaction_date: new Date(transactionDetail?.transaction_date)
         .toISOString()
         .split("T")[0],
       customer_id: transactionDetail?.customer_id
@@ -76,7 +76,6 @@ export default function EditCashierForm({
   const { editTransaction } = cashierService;
 
   async function onSubmit(data: z.infer<typeof CashierSchema>) {
-    console.log("submit");
     if (!isPaid) {
       const res = await editTransaction(String(transactionId), {
         ...data,
@@ -145,7 +144,7 @@ export default function EditCashierForm({
               name="transaction_date"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel>Tanggal</FormLabel>
+                  <FormLabel>Tanggal Transaksi</FormLabel>
                   <FormControl>
                     <Input {...field} type="text" disabled />
                   </FormControl>
